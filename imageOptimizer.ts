@@ -1,5 +1,6 @@
-const MAX_DIMENSION = 1280; // Max width/height for images
-const JPEG_QUALITY = 0.75; // 75% quality for compression
+
+const MAX_DIMENSION = 800; // Reduced to keep text payload small for AI chat
+const JPEG_QUALITY = 0.5; // Aggressive compression for efficient copy-pasting
 
 export const optimizeAndConvertToBase64 = (file: File): Promise<string> =>
   new Promise((resolve, reject) => {

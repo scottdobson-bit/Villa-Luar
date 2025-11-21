@@ -2,7 +2,7 @@
 import React, { createContext, useState, useContext, ReactNode, useCallback, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import { VillaContent } from '../types';
-import { getContent, saveContent, getDraftContent, saveDraftContent, clearDraftContent } from '../services/contentService';
+import { getContent, getDraftContent, saveDraftContent, clearDraftContent } from '../services/contentService';
 
 interface ContentContextType {
   content: VillaContent | null;
@@ -10,7 +10,9 @@ interface ContentContextType {
   isLoading: boolean;
   isDirty: boolean;
   updateDraftContent: (newContent: VillaContent) => void;
-  saveChanges: (onSuccess?: () => void) => void;
+  saveDraft: (onSuccess?: () => void) => void;
+  discardDraft: () => void;
+  reloadContent: () => Promise<void>;
 }
 
 const ContentContext = createContext<ContentContextType | undefined>(undefined);
@@ -73,26 +75,34 @@ export const ContentProvider = ({ children }: React.PropsWithChildren) => {
     }
   }, []);
 
-  const saveChanges = useCallback(async (onSuccess?: () => void) => {
+  const saveDraft = useCallback(async (onSuccess?: () => void) => {
     if (draftContent) {
-      setIsLoading(true); // Show loading while saving heavy data
+      setIsLoading(true);
       try {
-          await saveContent(draftContent);
-          await clearDraftContent();
-          
-          // Update local state to reflect "live" is now "draft"
-          setContent(draftContent);
-          setIsDirty(false);
-          
+          await saveDraftContent(draftContent);
           if (onSuccess) onSuccess();
       } catch (e) {
-          console.error("Failed to publish changes", e);
-          alert("Failed to publish changes. Please check console.");
+          console.error("Failed to save draft explicitly", e);
+          alert("Failed to save draft. Please check console.");
       } finally {
           setIsLoading(false);
       }
     }
   }, [draftContent]);
+
+  const discardDraft = useCallback(async () => {
+    if (window.confirm("Are you sure you want to discard all local changes and sync with the live website? This cannot be undone.")) {
+        setIsLoading(true);
+        try {
+            await clearDraftContent();
+            await loadData(); // Reload all content
+        } catch (e) {
+            console.error("Failed to discard draft", e);
+        } finally {
+            setIsLoading(false);
+        }
+    }
+  }, [loadData]);
   
   const value = {
     content: isPreviewMode ? draftContent : content,
@@ -100,7 +110,9 @@ export const ContentProvider = ({ children }: React.PropsWithChildren) => {
     isLoading,
     isDirty,
     updateDraftContent,
-    saveChanges
+    saveDraft,
+    discardDraft,
+    reloadContent: loadData,
   };
 
   return (
@@ -115,5 +127,6 @@ export const useContent = (): ContentContextType => {
   if (context === undefined) {
     throw new Error('useContent must be used within a ContentProvider');
   }
+  // FIX: Changed 'Content' to 'context' to return the correct value.
   return context;
 };
