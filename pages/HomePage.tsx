@@ -4,7 +4,6 @@ import { Link } from 'react-router-dom';
 import { useContent } from '../context/ContentContext';
 import PhotoGallery, { PhotoGalleryHandle } from '../components/PhotoGallery';
 import ThemeToggle from '../components/ThemeToggle';
-import Chatbot from '../components/Chatbot';
 import { CALENDLY_URL } from '../constants';
 
 
@@ -206,7 +205,6 @@ const HomePage = () => {
                     </div>
                 </div>
             </footer>
-            <Chatbot />
         </main>
     );
 };

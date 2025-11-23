@@ -78,8 +78,8 @@ export const getContent = async (): Promise<VillaContent> => {
     // 2. If not logged in (Public), OR if no local draft exists, FETCH THE FILE
     // This is the critical path for the live site.
     try {
-        // Use absolute path to ensure we load the local project file
-        const fetchUrl = '/villa-content.json';
+        // Use absolute path to ensure we look at root
+        const fetchUrl = PRODUCTION_CONFIG_URL || '/villa-content.json';
         
         // Add timestamp to bust cache
         const separator = fetchUrl.includes('?') ? '&' : '?';
@@ -104,6 +104,18 @@ export const getContent = async (): Promise<VillaContent> => {
   } catch (error) {
     console.error("Failed to get content:", error);
     return INITIAL_CONTENT;
+  }
+};
+
+export const saveContent = async (content: VillaContent): Promise<void> => {
+  // For this simplified workflow, 'saveContent' essentially just means 
+  // "Save to Draft Store" because the real "Save" is the file download.
+  // We keep this for compatibility.
+  try {
+    await dbAction(DRAFT_STORE, 'readwrite', store => store.put(content, 'content'));
+  } catch (error) {
+    console.error("Failed to save content to DB:", error);
+    throw error; 
   }
 };
 

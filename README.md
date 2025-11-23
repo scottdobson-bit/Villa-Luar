@@ -1,20 +1,59 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
-</div>
+# Villa Luar Website
 
-# Run and deploy your AI Studio app
+A modern React application for Villa Luar, featuring a CMS, AI-powered image descriptions, and a buyer chatbot.
 
-This contains everything you need to run your app locally.
+## Setup & Installation
 
-View your app in AI Studio: https://ai.studio/apps/drive/1FtvlE9BOl5DZRJWVx68V6z_7XMv295vS
+1.  **Clone the repository:**
+    ```bash
+    git clone <your-repo-url>
+    cd villa-luar-website
+    ```
 
-## Run Locally
+2.  **Install dependencies:**
+    ```bash
+    npm install
+    ```
 
-**Prerequisites:**  Node.js
+3.  **Environment Variables:**
+    *   Create a file named `.env` in the root directory.
+    *   Add your Gemini API Key:
+        ```env
+        API_KEY=your_actual_api_key_here
+        ```
 
+4.  **Content File:**
+    *   Ensure your `villa-content.json` file is placed inside a folder named `public/` at the root of the project.
+    *   Example: `public/villa-content.json`.
 
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+## Running Locally
+
+```bash
+npm run dev
+```
+Open [http://localhost:5173](http://localhost:5173) to view the site.
+
+## Building for Production
+
+```bash
+npm run build
+```
+This will generate a `dist/` folder containing the static files ready for deployment.
+
+## Updating Content
+
+The website loads content from `/villa-content.json`. 
+
+**To update the live site:**
+1.  Open the Admin Panel (`/admin`) locally.
+2.  Make your edits.
+3.  Click **"Download Content File"**.
+4.  Replace the existing `public/villa-content.json` file in your project with the new downloaded file.
+5.  Commit and push your changes (or redeploy).
+
+## Deployment (Cloud Run / Netlify / Vercel)
+
+Since this is a static site (SPA), it can be deployed to any static hosting provider.
+
+**Build Command:** `npm run build`
+**Output Directory:** `dist`

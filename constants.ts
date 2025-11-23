@@ -6,9 +6,9 @@ export const ADMIN_PASSWORD = 'zaq1';
 export const CALENDLY_URL = 'https://calendly.com/scott-cobellon/new-meeting';
 
 // --- CLOUD CONFIGURATION ---
-// The website will load its content from the 'villa-content.json' file
-// located in the root of the project. To update the live site, you will
-// need to replace this file with an updated version from the admin panel.
+// Option 1: Leave this empty ('') to load 'villa-content.json' from the local public folder (requires redeploying app to update).
+// Option 2: Paste a public URL (e.g., Google Cloud Storage URL) here to load content from an external source.
+// Example: 'https://storage.googleapis.com/my-villa-bucket/villa-content.json'
 export const PRODUCTION_CONFIG_URL = ''; 
 
 export const INITIAL_CONTENT: VillaContent = {
