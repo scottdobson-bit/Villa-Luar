@@ -63,6 +63,31 @@ const AdminPanel = () => {
         }
     };
 
+    const handleDownload = () => {
+        if (!draftContent) {
+            alert("No content available to download.");
+            return;
+        }
+        try {
+            const jsonString = JSON.stringify(draftContent, null, 2);
+            const blob = new Blob([jsonString], { type: "application/json" });
+            const href = URL.createObjectURL(blob);
+            
+            const link = document.createElement('a');
+            link.href = href;
+            link.download = "villa-content.json";
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(href);
+            
+            setToast({ show: true, message: "File downloaded! Replace public/villa-content.json." });
+        } catch (error) {
+            console.error("Download failed:", error);
+            alert("Failed to create download file.");
+        }
+    };
+
     const handleImport = (event: React.ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files?.[0];
         if (!file) return;
@@ -154,6 +179,13 @@ const AdminPanel = () => {
                         <input id="import-input" type="file" accept=".json" className="hidden" onChange={handleImport} />
                         
                         <button 
+                            onClick={handleDownload}
+                            className="px-4 py-2 text-sm font-medium text-white bg-green-600 rounded-md hover:bg-green-700 transition-colors dark:bg-green-700 dark:hover:bg-green-600"
+                        >
+                            Download JSON
+                        </button>
+
+                        <button 
                             onClick={handleSaveChanges} 
                             disabled={!isDirty} 
                             className="px-6 py-2 text-sm font-medium text-white bg-stone-600 rounded-md hover:bg-stone-700 disabled:bg-stone-400 disabled:cursor-not-allowed transition-colors dark:bg-stone-700 dark:hover:bg-stone-600 dark:disabled:bg-stone-800"
@@ -167,18 +199,17 @@ const AdminPanel = () => {
                     </div>
                 </div>
                 
-                {/* AI Deployment Workflow Box */}
+                {/* Deployment Workflow Box */}
                 <div className="bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-lg p-4 shadow-sm">
                     <div className="flex flex-col md:flex-row items-center justify-between gap-4">
                         <div className="text-sm text-amber-900 dark:text-amber-100">
                             <p className="font-bold text-lg mb-1 flex items-center gap-2">
-                                <span className="text-xl">🤖</span> How to Publish Changes Live
+                                <span className="text-xl">🚀</span> How to Publish Changes Live
                             </p>
                             <ol className="list-decimal list-inside mt-2 space-y-1 ml-1">
                                 <li>Make your edits here and click <strong>Save Draft</strong>.</li>
-                                <li>Click the <strong>Copy Data for AI</strong> button on the right.</li>
-                                <li>Paste the data into the chat with me (the AI) and say: <em>"Update the app with this data."</em></li>
-                                <li>I will update the code, and your changes will be live on the next deploy!</li>
+                                <li><strong>Option A (Manual):</strong> Click <strong>Download JSON</strong> and replace <code className="bg-white dark:bg-stone-800 px-1 rounded">public/villa-content.json</code> in the codebase.</li>
+                                <li><strong>Option B (AI Assist):</strong> Click <strong>Copy Data for AI</strong> and tell the AI: <em>"Update the app with this data."</em></li>
                             </ol>
                         </div>
                          <button 
