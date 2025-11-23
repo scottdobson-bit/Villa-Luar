@@ -1,7 +1,15 @@
 import { GoogleGenAI, GenerateContentResponse } from "@google/genai";
 import { FAQ } from "../types";
 
-const ai = new GoogleGenAI({ apiKey: process.env.API_KEY as string });
+// Helper to get AI instance safely
+const getAI = () => {
+  const apiKey = process.env.API_KEY;
+  if (!apiKey) {
+    console.warn("API_KEY is missing.");
+    return null;
+  }
+  return new GoogleGenAI({ apiKey });
+};
 
 // Utility to convert file to base64
 const fileToGenerativePart = async (file: File) => {
@@ -21,6 +29,9 @@ const fileToGenerativePart = async (file: File) => {
 
 export const generateDescriptionForImage = async (imageFile: File): Promise<string> => {
   try {
+    const ai = getAI();
+    if (!ai) return "Error: API Key missing.";
+
     const imagePart = await fileToGenerativePart(imageFile);
     const prompt = `You are a luxury real estate agent writing a listing for a high-end Spanish villa. 
     Write a short, evocative, and appealing description for this photo. 
@@ -45,6 +56,9 @@ export const getChatbotResponse = async (question: string, faqs: FAQ[]): Promise
   }
 
   try {
+    const ai = getAI();
+    if (!ai) return "I'm sorry, I'm not correctly configured right now (Missing API Key).";
+
      if (!faqs || faqs.length === 0) {
       return "Thank you for your question. We are currently updating our information. Please contact an agent for more details about Villa Luar.";
     }

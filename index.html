@@ -7,19 +7,10 @@
     <title>Villa Luar - For Sale</title>
     <script>
       // Prevents Flash of Unstyled Content (FOUC) for dark mode.
-      // This script runs before the page is rendered to apply the correct theme instantly.
       if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
         document.documentElement.classList.add('dark');
       } else {
         document.documentElement.classList.remove('dark');
-      }
-    </script>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-      // Configure Tailwind CSS to use the 'class' strategy for dark mode.
-      // This allows the theme toggle to work by adding/removing the 'dark' class from the <html> element.
-      tailwind.config = {
-        darkMode: 'class',
       }
     </script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -36,21 +27,21 @@
         scroll-behavior: smooth;
       }
     </style>
+    <!-- Calendly widget script -->
+    <script type="text/javascript" src="https://assets.calendly.com/assets/external/widget.js" async></script>
   <script type="importmap">
 {
   "imports": {
-    "react": "https://aistudiocdn.com/react@^19.2.0",
-    "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.0/",
-    "react/": "https://aistudiocdn.com/react@^19.2.0/",
-    "@google/genai": "https://aistudiocdn.com/@google/genai@^1.30.0",
-    "react-router-dom": "https://aistudiocdn.com/react-router-dom@^7.9.6",
+    "vite": "https://aistudiocdn.com/vite@^7.2.4",
     "@vitejs/plugin-react": "https://aistudiocdn.com/@vitejs/plugin-react@^5.1.1",
-    "vite": "https://aistudiocdn.com/vite@^7.2.4"
+    "@google/genai": "https://aistudiocdn.com/@google/genai@^1.30.0",
+    "react/": "https://aistudiocdn.com/react@^19.2.0/",
+    "react": "https://aistudiocdn.com/react@^19.2.0",
+    "react-router-dom": "https://aistudiocdn.com/react-router-dom@^7.9.6",
+    "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.0/"
   }
 }
 </script>
-  <!-- Calendly widget script -->
-  <script type="text/javascript" src="https://assets.calendly.com/assets/external/widget.js" async></script>
 </head>
   <body>
     <div id="root"></div>
