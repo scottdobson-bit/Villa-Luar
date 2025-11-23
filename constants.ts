@@ -1,7 +1,8 @@
 
 import { VillaContent } from './types';
-// Import directly from the public file using the alias to ensure bundling
-import contentRaw from '@/public/villa-content.json';
+// Import directly from the public file using relative path to ensure bundling
+// We use a relative path here assuming constants.ts is in the root alongside the public folder
+import contentRaw from './public/villa-content.json';
 
 export const ADMIN_PASSWORD = 'zaq1';
 

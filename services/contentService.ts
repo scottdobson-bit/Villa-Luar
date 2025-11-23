@@ -74,15 +74,9 @@ export const getContent = async (): Promise<VillaContent> => {
     }
 
     // 2. If not logged in (Public), OR if no local draft exists, FETCH THE FILE
-    // This is the critical path for the live site.
     try {
-        // Use standard Vite env for base URL
-        // Cast import.meta to any to avoid TS error if types are missing
-        const baseUrl = (import.meta as any).env.BASE_URL;
-        // Ensure strictly one slash between base and filename
-        const cleanBase = baseUrl.endsWith('/') ? baseUrl : `${baseUrl}/`;
-        const defaultContentUrl = `${cleanBase}villa-content.json`;
-        
+        // Use absolute path to ensure we hit the root of the domain where public/ files are served
+        const defaultContentUrl = '/villa-content.json';
         const fetchUrl = PRODUCTION_CONFIG_URL || defaultContentUrl;
         
         console.log(`Attempting to fetch content from: ${fetchUrl}`);
@@ -92,16 +86,22 @@ export const getContent = async (): Promise<VillaContent> => {
         const response = await fetch(`${fetchUrl}${separator}t=${new Date().getTime()}`);
         
         if (response.ok) {
-            const serverContent = await response.json();
-            if (isValidContent(serverContent)) {
-                // Ensure new fields exist if loading older JSON
-                if (!serverContent.location && INITIAL_CONTENT.location) {
-                    serverContent.location = INITIAL_CONTENT.location;
+            // Check content type to avoid parsing HTML 404 pages as JSON
+            const contentType = response.headers.get("content-type");
+            if (contentType && contentType.includes("application/json")) {
+                const serverContent = await response.json();
+                if (isValidContent(serverContent)) {
+                    // Ensure new fields exist if loading older JSON
+                    if (!serverContent.location && INITIAL_CONTENT.location) {
+                        serverContent.location = INITIAL_CONTENT.location;
+                    }
+                    console.log("Loaded content from Server File");
+                    return serverContent;
+                } else {
+                    console.warn("Server content failed validation structure.");
                 }
-                console.log("Loaded content from Server File");
-                return serverContent;
             } else {
-                console.warn("Server content failed validation.");
+                 console.warn(`Server returned ${contentType} instead of JSON. Likely a 404 page.`);
             }
         } else {
             console.warn(`Could not load ${fetchUrl}, status: ${response.status}`);
