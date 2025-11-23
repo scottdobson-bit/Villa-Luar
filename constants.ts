@@ -1,7 +1,7 @@
+
 import { VillaContent } from './types';
-// Import directly from the public file. 
-// Note: In some build setups, imported JSON might be wrapped in a 'default' export.
-import * as contentRaw from './public/villa-content.json';
+// Import directly from the public file using the alias to ensure bundling
+import contentRaw from '@/public/villa-content.json';
 
 export const ADMIN_PASSWORD = 'zaq1';
 
