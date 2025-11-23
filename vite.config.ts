@@ -1,33 +1,15 @@
 import { defineConfig, loadEnv } from 'vite';
 import react from '@vitejs/plugin-react';
-import fs from 'fs';
-import path from 'path';
-
-// Custom plugin to copy villa-content.json from root to dist
-const copyContentPlugin = () => {
-  return {
-    name: 'copy-content',
-    writeBundle() {
-      const srcPath = path.resolve('villa-content.json');
-      const destPath = path.resolve('dist/villa-content.json');
-      if (fs.existsSync(srcPath)) {
-        // Ensure dist exists (it should after build)
-        if (!fs.existsSync(path.dirname(destPath))) {
-           fs.mkdirSync(path.dirname(destPath), { recursive: true });
-        }
-        fs.copyFileSync(srcPath, destPath);
-        console.log('✓ Copied villa-content.json to build output');
-      }
-    }
-  }
-};
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => {
-  const env = loadEnv(mode, path.resolve(), '');
+  // Use a safer way to get CWD if needed, or just rely on default behavior
+  // For basic env loading, strict CWD isn't always required, but here is the safe pattern:
+  // Fix: Cast process to any to avoid "Property 'cwd' does not exist on type 'Process'" error when node types are missing
+  const env = loadEnv(mode, (process as any).cwd(), '');
 
   return {
-    plugins: [react(), copyContentPlugin()],
+    plugins: [react()],
     define: {
       'process.env': {
         API_KEY: JSON.stringify(env.API_KEY)

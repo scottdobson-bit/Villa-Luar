@@ -1,5 +1,5 @@
 
-import { VillaContent, VillaPhoto, PhotoSection } from '../types';
+import { VillaContent } from '../types';
 import { INITIAL_CONTENT, PRODUCTION_CONFIG_URL } from '../constants';
 
 const DB_NAME = 'VillaLuarDB';

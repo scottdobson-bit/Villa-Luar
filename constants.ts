@@ -1,5 +1,5 @@
 import { VillaContent } from './types';
-// Import directly from the root file. Vite bundles this automatically.
+// Import directly from the root file using standard relative path.
 import contentFile from './villa-content.json';
 
 export const ADMIN_PASSWORD = 'zaq1';
