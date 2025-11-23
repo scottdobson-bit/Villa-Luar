@@ -78,8 +78,12 @@ export const getContent = async (): Promise<VillaContent> => {
     // 2. If not logged in (Public), OR if no local draft exists, FETCH THE FILE
     // This is the critical path for the live site.
     try {
-        // Use absolute path to ensure we look at root
-        const fetchUrl = PRODUCTION_CONFIG_URL || '/villa-content.json';
+        // Use absolute path to ensure we look at root, respecting Vite's base path
+        const meta = import.meta as any;
+        const baseUrl = meta.env.BASE_URL.endsWith('/') ? meta.env.BASE_URL : `${meta.env.BASE_URL}/`;
+        const defaultContentUrl = `${baseUrl}villa-content.json`;
+        
+        const fetchUrl = PRODUCTION_CONFIG_URL || defaultContentUrl;
         
         // Add timestamp to bust cache
         const separator = fetchUrl.includes('?') ? '&' : '?';
@@ -99,7 +103,7 @@ export const getContent = async (): Promise<VillaContent> => {
         console.warn("Could not load server content (villa-content.json). Loading defaults.", e);
     }
     
-    // 3. Absolute fallback
+    // 3. Absolute fallback (Bundled content)
     return INITIAL_CONTENT;
   } catch (error) {
     console.error("Failed to get content:", error);
