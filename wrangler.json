@@ -1,0 +1,10 @@
+{
+  "name": "villa-luar-website",
+  "compatibility_date": "2024-11-23",
+  "assets": {
+    "directory": "./dist"
+  },
+  "observability": {
+    "enabled": true
+  }
+}
