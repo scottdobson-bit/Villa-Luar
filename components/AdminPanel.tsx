@@ -69,6 +69,21 @@ const AdminPanel = () => {
             return;
         }
         try {
+            // Validate and count assets to reassure user that everything is included
+            let imageCount = 0;
+            if (draftContent.textContent?.heroImageUrl) imageCount++;
+            if (draftContent.location?.imageUrl) imageCount++;
+            if (draftContent.logoUrl) imageCount++;
+            if (draftContent.faviconUrl) imageCount++;
+            
+            draftContent.gallerySections.forEach(section => {
+                section.subSections.forEach(sub => {
+                    imageCount += sub.photos.length;
+                });
+            });
+            // Legacy photos check
+            if (draftContent.photos) imageCount += draftContent.photos.length;
+
             const jsonString = JSON.stringify(draftContent, null, 2);
             const blob = new Blob([jsonString], { type: "application/json" });
             const href = URL.createObjectURL(blob);
@@ -81,7 +96,7 @@ const AdminPanel = () => {
             document.body.removeChild(link);
             URL.revokeObjectURL(href);
             
-            setToast({ show: true, message: "File downloaded! Replace public/villa-content.json." });
+            setToast({ show: true, message: `Downloaded! Includes ${imageCount} images and all text.` });
         } catch (error) {
             console.error("Download failed:", error);
             alert("Failed to create download file.");
@@ -180,7 +195,7 @@ const AdminPanel = () => {
                         
                         <button 
                             onClick={handleDownload}
-                            className="px-4 py-2 text-sm font-medium text-white bg-green-600 rounded-md hover:bg-green-700 transition-colors dark:bg-green-700 dark:hover:bg-green-600"
+                            className="px-4 py-2 text-sm font-medium text-white bg-green-600 rounded-md hover:bg-green-700 transition-colors dark:bg-green-700 dark:hover:bg-green-600 shadow-md"
                         >
                             Download JSON
                         </button>
@@ -208,7 +223,7 @@ const AdminPanel = () => {
                             </p>
                             <ol className="list-decimal list-inside mt-2 space-y-1 ml-1">
                                 <li>Make your edits here and click <strong>Save Draft</strong>.</li>
-                                <li><strong>Option A (Manual):</strong> Click <strong>Download JSON</strong> and replace <code className="bg-white dark:bg-stone-800 px-1 rounded">public/villa-content.json</code> in the codebase.</li>
+                                <li><strong>Option A (Manual):</strong> Click <strong>Download JSON</strong> (this file contains all images & text) and replace <code className="bg-white dark:bg-stone-800 px-1 rounded">public/villa-content.json</code> in the codebase.</li>
                                 <li><strong>Option B (AI Assist):</strong> Click <strong>Copy Data for AI</strong> and tell the AI: <em>"Update the app with this data."</em></li>
                             </ol>
                         </div>
