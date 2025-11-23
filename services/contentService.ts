@@ -89,7 +89,12 @@ export const getContent = async (): Promise<VillaContent> => {
             // Check content type to avoid parsing HTML 404 pages as JSON
             const contentType = response.headers.get("content-type");
             if (contentType && contentType.includes("application/json")) {
-                const serverContent = await response.json();
+                const text = await response.text();
+                // Log size for debugging purposes
+                console.log(`Content file loaded. Size: ${(text.length / 1024).toFixed(2)} KB`);
+                
+                const serverContent = JSON.parse(text);
+                
                 if (isValidContent(serverContent)) {
                     // Ensure new fields exist if loading older JSON
                     if (!serverContent.location && INITIAL_CONTENT.location) {

@@ -7,8 +7,8 @@
     "node": ">=18.0.0"
   },
   "scripts": {
-    "dev": "vite",
-    "build": "tsc && vite build",
+    "dev": "node build-helper.js && vite",
+    "build": "node build-helper.js && tsc && vite build",
     "preview": "vite preview",
     "deploy": "wrangler deploy"
   },
