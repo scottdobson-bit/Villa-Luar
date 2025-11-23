@@ -16,6 +16,6 @@
     "noUnusedParameters": false,
     "noFallthroughCasesInSwitch": true
   },
-  "include": ["./**/*.ts", "./**/*.tsx", "./**/*.js", "./villa-content.json"],
+  "include": ["./**/*.ts", "./**/*.tsx", "./**/*.js", "./public/villa-content.json"],
   "exclude": ["node_modules"]
 }

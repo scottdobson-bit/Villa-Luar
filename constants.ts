@@ -1,6 +1,6 @@
 import { VillaContent } from './types';
 // Import directly from the root file using standard relative path.
-import contentFile from './villa-content.json';
+import contentFile from './public/villa-content.json';
 
 export const ADMIN_PASSWORD = 'zaq1';
 

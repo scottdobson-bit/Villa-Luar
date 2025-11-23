@@ -68,6 +68,7 @@ export const getContent = async (): Promise<VillaContent> => {
             const draftContent = await dbAction<VillaContent>(DRAFT_STORE, 'readonly', store => store.get('content'));
             if (draftContent) {
                 if (!draftContent.location) draftContent.location = INITIAL_CONTENT.location;
+                console.log("Loaded content from Local Draft (Admin mode)");
                 return draftContent;
             }
         } catch (e) {
@@ -94,6 +95,7 @@ export const getContent = async (): Promise<VillaContent> => {
             if (isValidContent(serverContent)) {
                 // Ensure new fields exist if loading older JSON
                 if (!serverContent.location) serverContent.location = INITIAL_CONTENT.location;
+                console.log("Loaded content from Server File");
                 return serverContent;
             }
         } else {
@@ -104,6 +106,7 @@ export const getContent = async (): Promise<VillaContent> => {
     }
     
     // 3. Absolute fallback (Bundled content)
+    console.log("Loaded content from Bundled Fallback (INITIAL_CONTENT)");
     return INITIAL_CONTENT;
   } catch (error) {
     console.error("Failed to get content:", error);
