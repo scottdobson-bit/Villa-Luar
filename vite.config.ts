@@ -18,6 +18,8 @@ export default defineConfig(({ mode }) => {
       outDir: 'dist',
       assetsDir: 'assets',
       sourcemap: false,
+      // Increase chunk size limit to avoid warnings when bundling large JSON/base64 content
+      chunkSizeWarningLimit: 3000, 
     }
   };
 });

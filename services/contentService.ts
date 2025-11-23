@@ -50,10 +50,7 @@ const dbAction = async <T>(
 
 const isValidContent = (content: any): content is VillaContent => {
   return content && 
-         content.textContent &&
-         content.textContent.considerationsTitle !== undefined &&
-         content.textContent.considerationsText !== undefined &&
-         Array.isArray(content.faqs);
+         (content.textContent || content.gallerySections); // Basic validation
 };
 
 // --- Public API ---
@@ -67,7 +64,7 @@ export const getContent = async (): Promise<VillaContent> => {
         try {
             const draftContent = await dbAction<VillaContent>(DRAFT_STORE, 'readonly', store => store.get('content'));
             if (draftContent) {
-                if (!draftContent.location) draftContent.location = INITIAL_CONTENT.location;
+                if (!draftContent.location && INITIAL_CONTENT.location) draftContent.location = INITIAL_CONTENT.location;
                 console.log("Loaded content from Local Draft (Admin mode)");
                 return draftContent;
             }
@@ -79,12 +76,16 @@ export const getContent = async (): Promise<VillaContent> => {
     // 2. If not logged in (Public), OR if no local draft exists, FETCH THE FILE
     // This is the critical path for the live site.
     try {
-        // Use absolute path to ensure we look at root, respecting Vite's base path
-        const meta = import.meta as any;
-        const baseUrl = meta.env.BASE_URL.endsWith('/') ? meta.env.BASE_URL : `${meta.env.BASE_URL}/`;
-        const defaultContentUrl = `${baseUrl}villa-content.json`;
+        // Use standard Vite env for base URL
+        // Cast import.meta to any to avoid TS error if types are missing
+        const baseUrl = (import.meta as any).env.BASE_URL;
+        // Ensure strictly one slash between base and filename
+        const cleanBase = baseUrl.endsWith('/') ? baseUrl : `${baseUrl}/`;
+        const defaultContentUrl = `${cleanBase}villa-content.json`;
         
         const fetchUrl = PRODUCTION_CONFIG_URL || defaultContentUrl;
+        
+        console.log(`Attempting to fetch content from: ${fetchUrl}`);
         
         // Add timestamp to bust cache
         const separator = fetchUrl.includes('?') ? '&' : '?';
@@ -94,9 +95,13 @@ export const getContent = async (): Promise<VillaContent> => {
             const serverContent = await response.json();
             if (isValidContent(serverContent)) {
                 // Ensure new fields exist if loading older JSON
-                if (!serverContent.location) serverContent.location = INITIAL_CONTENT.location;
+                if (!serverContent.location && INITIAL_CONTENT.location) {
+                    serverContent.location = INITIAL_CONTENT.location;
+                }
                 console.log("Loaded content from Server File");
                 return serverContent;
+            } else {
+                console.warn("Server content failed validation.");
             }
         } else {
             console.warn(`Could not load ${fetchUrl}, status: ${response.status}`);
@@ -117,7 +122,6 @@ export const getContent = async (): Promise<VillaContent> => {
 export const saveContent = async (content: VillaContent): Promise<void> => {
   // For this simplified workflow, 'saveContent' essentially just means 
   // "Save to Draft Store" because the real "Save" is the file download.
-  // We keep this for compatibility.
   try {
     await dbAction(DRAFT_STORE, 'readwrite', store => store.put(content, 'content'));
   } catch (error) {
@@ -129,7 +133,7 @@ export const saveContent = async (content: VillaContent): Promise<void> => {
 export const getDraftContent = async (): Promise<VillaContent | null> => {
   try {
     const content = await dbAction<VillaContent>(DRAFT_STORE, 'readonly', store => store.get('content'));
-    if (content && !content.location) {
+    if (content && !content.location && INITIAL_CONTENT.location) {
         content.location = INITIAL_CONTENT.location;
     }
     return content || null;
