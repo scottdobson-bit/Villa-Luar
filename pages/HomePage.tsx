@@ -146,7 +146,7 @@ const CalendlyBookingSection = () => {
         <div
           ref={widgetRef}
           className="mt-10 border dark:border-stone-700 rounded-2xl shadow-xl overflow-hidden bg-white"
-          style={{ minWidth: '320px', height: '950px' }}
+          style={{ minWidth: '320px', height: '1100px' }}
         />
       </div>
     </section>
