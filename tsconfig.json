@@ -22,5 +22,5 @@
     }
   },
   "include": ["./**/*.ts", "./**/*.tsx", "./**/*.js", "./public/villa-content.json"],
-  "exclude": ["node_modules"]
+  "exclude": ["node_modules", "worker.ts"]
 }

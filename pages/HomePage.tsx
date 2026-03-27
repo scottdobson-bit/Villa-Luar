@@ -129,7 +129,7 @@ const HomePage = () => {
   const aboutRef   = useScrollReveal<HTMLElement>();
   const featuresRef = useScrollRevealChildren<HTMLDivElement>();
   const locationRef = useScrollReveal<HTMLElement>();
-  const bookingRef  = useScrollReveal<HTMLElement>();
+  const bookingRef  = useScrollReveal<HTMLDivElement>();
 
   if (isLoading || !content) return <LoadingScreen />;
 

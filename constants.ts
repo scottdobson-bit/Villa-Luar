@@ -1,4 +1,4 @@
-
+/// <reference types="vite/client" />
 import { VillaContent } from './types';
 // Import directly from the public file using relative path to ensure bundling
 import contentRaw from './public/villa-content.json';
