@@ -160,7 +160,7 @@ const HomePage = () => {
       {/* ── Hero ──────────────────────────────────────────────────────────── */}
       <section className="hero-noise relative h-screen flex flex-col items-center justify-start text-white text-center pt-24 md:pt-32 overflow-hidden">
         {/* Dark gradient overlay */}
-        <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black/70 z-[1]" />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/35 via-black/20 to-black/50 z-[1]" />
         {/* Subtle amber tint at bottom */}
         <div className="absolute bottom-0 left-0 right-0 h-1/3 bg-gradient-to-t from-amber-950/30 to-transparent z-[1]" />
         {/* Ken Burns image */}
@@ -189,7 +189,7 @@ const HomePage = () => {
 
         {/* CTAs */}
         <div className="hero-cta absolute bottom-12 left-1/2 -translate-x-1/2 flex flex-col items-center gap-6">
-          <div className="flex flex-wrap gap-4 justify-center">
+          <div className="flex flex-row gap-4 justify-center items-center w-full">
             <a
               href="#gallery"
               onClick={handleViewGallery}
@@ -221,7 +221,7 @@ const HomePage = () => {
       <section
         id="about"
         ref={aboutRef}
-        className="reveal py-20 bg-white dark:bg-stone-900"
+        className="py-20 bg-white dark:bg-stone-900"
       >
         <div className="container mx-auto px-6 grid md:grid-cols-2 gap-16 items-center">
           {/* Image with floating stat cards */}

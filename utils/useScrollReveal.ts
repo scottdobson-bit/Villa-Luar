@@ -6,7 +6,7 @@ import { useEffect, useRef } from 'react';
  * Works with .reveal, .reveal-left, .reveal-right classes in index.css.
  */
 export function useScrollReveal<T extends HTMLElement>(
-  threshold = 0.15,
+  threshold = 0.05,
   once = true
 ) {
   const ref = useRef<T>(null);
@@ -39,7 +39,7 @@ export function useScrollReveal<T extends HTMLElement>(
  * Useful for staggered lists.
  */
 export function useScrollRevealChildren<T extends HTMLElement>(
-  threshold = 0.1
+  threshold = 0.05
 ) {
   const containerRef = useRef<T>(null);
 
