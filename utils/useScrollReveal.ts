@@ -1,18 +1,22 @@
-import { useEffect, useRef } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 
 /**
- * Attaches an IntersectionObserver to the returned ref.
+ * Attaches an IntersectionObserver to the returned callback ref.
  * When the element enters the viewport, the CSS class "visible" is added.
  * Works with .reveal, .reveal-left, .reveal-right classes in index.css.
+ *
+ * Uses a callback ref (not useRef) so the effect fires when the element
+ * is actually mounted — safe when the component conditionally renders
+ * (e.g. behind an isLoading guard).
  */
 export function useScrollReveal<T extends HTMLElement>(
   threshold = 0.05,
   once = true
 ) {
-  const ref = useRef<T>(null);
+  const [el, setEl] = useState<T | null>(null);
+  const callbackRef = useCallback((node: T | null) => setEl(node), []);
 
   useEffect(() => {
-    const el = ref.current;
     if (!el) return;
 
     const observer = new IntersectionObserver(
@@ -29,22 +33,25 @@ export function useScrollReveal<T extends HTMLElement>(
 
     observer.observe(el);
     return () => observer.disconnect();
-  }, [threshold, once]);
+  }, [el, threshold, once]);
 
-  return ref;
+  return callbackRef;
 }
 
 /**
  * Observes all children with a .reveal* class inside the returned container ref.
  * Useful for staggered lists.
+ *
+ * Uses a callback ref so the effect fires after the element is mounted,
+ * not just after first render (which may be a loading screen).
  */
 export function useScrollRevealChildren<T extends HTMLElement>(
   threshold = 0.05
 ) {
-  const containerRef = useRef<T>(null);
+  const [container, setContainer] = useState<T | null>(null);
+  const callbackRef = useCallback((node: T | null) => setContainer(node), []);
 
   useEffect(() => {
-    const container = containerRef.current;
     if (!container) return;
 
     const targets = container.querySelectorAll<HTMLElement>(
@@ -65,7 +72,7 @@ export function useScrollRevealChildren<T extends HTMLElement>(
 
     targets.forEach(t => observer.observe(t));
     return () => observer.disconnect();
-  }, [threshold]);
+  }, [container, threshold]);
 
-  return containerRef;
+  return callbackRef;
 }
