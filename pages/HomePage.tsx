@@ -5,7 +5,7 @@ import PhotoGallery, { PhotoGalleryHandle } from '../components/PhotoGallery';
 import ThemeToggle from '../components/ThemeToggle';
 import Chatbot from '../components/Chatbot';
 import { CALENDLY_URL } from '../constants';
-import { useScrollReveal, useScrollRevealChildren } from '../utils/useScrollReveal';
+import { useScrollRevealChildren } from '../utils/useScrollReveal';
 
 // ─── Wave Divider ─────────────────────────────────────────────────────────────
 const WaveDivider = ({
@@ -129,7 +129,6 @@ const HomePage = () => {
   const aboutRef    = useScrollRevealChildren<HTMLDivElement>();
   const featuresRef = useScrollRevealChildren<HTMLDivElement>();
   const locationRef = useScrollRevealChildren<HTMLDivElement>();
-  const bookingRef  = useScrollReveal<HTMLDivElement>();
 
   if (isLoading || !content) return <LoadingScreen />;
 
@@ -158,11 +157,9 @@ const HomePage = () => {
     <main>
 
       {/* ── Hero ──────────────────────────────────────────────────────────── */}
-      <section className="hero-noise relative h-screen flex flex-col items-center justify-start text-white text-center pt-24 md:pt-32 overflow-hidden">
-        {/* Dark gradient overlay */}
-        <div className="absolute inset-0 bg-gradient-to-b from-black/35 via-black/20 to-black/50 z-[1]" />
-        {/* Subtle amber tint at bottom */}
-        <div className="absolute bottom-0 left-0 right-0 h-1/3 bg-gradient-to-t from-amber-950/30 to-transparent z-[1]" />
+      <section className="hero-noise relative h-screen flex flex-col items-center justify-center text-white text-center overflow-hidden">
+        {/* Light gradient overlay — keep image bright */}
+        <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-black/10 to-black/30 z-[1]" />
         {/* Ken Burns image */}
         {textContent.heroImageUrl && (
           <img
@@ -172,24 +169,25 @@ const HomePage = () => {
           />
         )}
 
-        {/* Title card */}
-        <div className="relative z-10 px-4 flex flex-col items-center gap-8">
-          <div className="bg-black/20 backdrop-blur-md p-8 md:p-12 rounded-3xl border border-white/10 shadow-2xl max-w-4xl mx-auto">
-            <p className="hero-subtitle text-amber-300 text-sm md:text-base font-medium tracking-[0.25em] uppercase mb-4">
+        {/* Title — no frosted glass panel, just strong text shadows */}
+        <div className="relative z-10 px-6 flex flex-col items-center gap-10 w-full">
+          <div className="max-w-4xl mx-auto">
+            <p className="hero-subtitle text-amber-300 text-sm md:text-base font-medium tracking-[0.25em] uppercase mb-4"
+               style={{ textShadow: '0 2px 8px rgba(0,0,0,0.8)' }}>
               Luxury Villa · For Sale
             </p>
-            <h1 className="hero-title text-6xl md:text-8xl font-bold tracking-tight" style={{ textShadow: '0 4px 24px rgba(0,0,0,0.6)' }}>
+            <h1 className="hero-title text-6xl md:text-8xl font-bold tracking-tight"
+                style={{ textShadow: '0 4px 32px rgba(0,0,0,0.7), 0 2px 8px rgba(0,0,0,0.5)' }}>
               {textContent.heroTitle}
             </h1>
-            <p className="hero-subtitle mt-4 text-lg md:text-xl max-w-2xl mx-auto text-white/90" style={{ textShadow: '0 2px 8px rgba(0,0,0,0.5)' }}>
+            <p className="hero-subtitle mt-4 text-lg md:text-xl max-w-2xl mx-auto text-white"
+               style={{ textShadow: '0 2px 12px rgba(0,0,0,0.8)' }}>
               {textContent.heroSubtitle}
             </p>
           </div>
-        </div>
 
-        {/* CTAs */}
-        <div className="hero-cta absolute bottom-12 left-1/2 -translate-x-1/2 flex flex-col items-center gap-6">
-          <div className="flex flex-row gap-4 justify-center items-center w-full">
+          {/* CTAs — inline so they stay centred with the text */}
+          <div className="flex flex-row gap-4 justify-center items-center">
             <a
               href="#gallery"
               onClick={handleViewGallery}
@@ -200,14 +198,16 @@ const HomePage = () => {
             <a
               href="#booking"
               onClick={(e) => handleScroll(e, 'booking')}
-              className="px-8 py-3 bg-white/15 text-white font-semibold rounded-full text-base border border-white/30 backdrop-blur-sm hover:bg-white/25 transition-all duration-300"
+              className="px-8 py-3 bg-white/20 text-white font-semibold rounded-full text-base border-2 border-white/60 hover:bg-white/30 transition-all duration-300"
+              style={{ textShadow: '0 1px 4px rgba(0,0,0,0.6)' }}
             >
               Book a Viewing
             </a>
           </div>
+
           {/* Scroll indicator */}
-          <a href="#about" onClick={(e) => handleScroll(e, 'about')} aria-label="Scroll down">
-            <div className="w-6 h-10 border-2 border-white/50 rounded-full flex justify-center items-start p-1 animate-bounce hover:border-white transition-colors">
+          <a href="#about" onClick={(e) => handleScroll(e, 'about')} aria-label="Scroll down" className="mt-4">
+            <div className="w-6 h-10 border-2 border-white/60 rounded-full flex justify-center items-start p-1 animate-bounce hover:border-white transition-colors">
               <div className="w-1 h-2 bg-white rounded-full" />
             </div>
           </a>
@@ -295,9 +295,7 @@ const HomePage = () => {
       <WaveDivider fromColor="bg-stone-100 dark:bg-stone-900" toColor="fill-white dark:fill-stone-800" />
 
       {/* ── Booking ───────────────────────────────────────────────────────── */}
-      <div ref={bookingRef} className="reveal">
-        <CalendlyBookingSection />
-      </div>
+      <CalendlyBookingSection />
 
       {/* Wave: booking → features */}
       <WaveDivider fromColor="bg-white dark:bg-stone-800" toColor="fill-stone-100 dark:fill-stone-900" flip />
