@@ -106,21 +106,52 @@ const LoadingScreen = () => (
 );
 
 // ─── Calendly ─────────────────────────────────────────────────────────────────
-const CalendlyBookingSection = () => (
-  <section id="booking" className="py-20 bg-white dark:bg-stone-800">
-    <div className="container mx-auto px-6 text-center max-w-4xl">
-      <SectionHeading>Arrange a Private Viewing</SectionHeading>
-      <p className="mt-4 text-stone-600 dark:text-stone-300 max-w-xl mx-auto">
-        Select an available time slot from our live calendar to schedule your personal tour of Villa Luar.
-      </p>
-      <div
-        className="calendly-inline-widget mt-10 border dark:border-stone-700 rounded-2xl shadow-xl overflow-hidden bg-white"
-        data-url={CALENDLY_URL}
-        style={{ minWidth: '320px', height: '950px' }}
-      />
-    </div>
-  </section>
-);
+const CalendlyBookingSection = () => {
+  const widgetRef = React.useRef<HTMLDivElement>(null);
+
+  React.useEffect(() => {
+    const el = widgetRef.current;
+    if (!el) return;
+
+    const init = () => {
+      if ((window as any).Calendly) {
+        (window as any).Calendly.initInlineWidget({
+          url: CALENDLY_URL,
+          parentElement: el,
+        });
+      }
+    };
+
+    // If script already loaded, init immediately; otherwise wait for it
+    if ((window as any).Calendly) {
+      init();
+    } else {
+      window.addEventListener('calendly:ready', init, { once: true });
+      // Fallback: poll briefly in case the event already fired
+      const t = setTimeout(init, 1500);
+      return () => {
+        window.removeEventListener('calendly:ready', init);
+        clearTimeout(t);
+      };
+    }
+  }, []);
+
+  return (
+    <section id="booking" className="py-20 bg-white dark:bg-stone-800">
+      <div className="container mx-auto px-6 text-center max-w-4xl">
+        <SectionHeading>Arrange a Private Viewing</SectionHeading>
+        <p className="mt-4 text-stone-600 dark:text-stone-300 max-w-xl mx-auto">
+          Select an available time slot from our live calendar to schedule your personal tour of Villa Luar.
+        </p>
+        <div
+          ref={widgetRef}
+          className="mt-10 border dark:border-stone-700 rounded-2xl shadow-xl overflow-hidden bg-white"
+          style={{ minWidth: '320px', height: '950px' }}
+        />
+      </div>
+    </section>
+  );
+};
 
 // ─── HomePage ─────────────────────────────────────────────────────────────────
 const HomePage = () => {
