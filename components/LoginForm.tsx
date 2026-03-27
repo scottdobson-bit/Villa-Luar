@@ -6,28 +6,34 @@ import { Link } from 'react-router-dom';
 const LoginForm = () => {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
   const { login } = useAuth();
   const { content } = useContent();
 
   const heroImageUrl = content?.textContent?.heroImageUrl;
 
-  // FIX: Define the handleSubmit function to handle form submission.
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
-    if (!login(password)) {
-      setError('Incorrect password. Please try again.');
+    setIsLoading(true);
+    try {
+      const success = await login(password);
+      if (!success) {
+        setError('Incorrect password. Please try again.');
+      }
+    } finally {
+      setIsLoading(false);
     }
   };
 
   return (
     <div className="relative flex items-center justify-center min-h-screen bg-stone-100 dark:bg-stone-900 overflow-hidden">
       {heroImageUrl && (
-        <div 
-          className="absolute inset-0 bg-cover bg-center z-0" 
+        <div
+          className="absolute inset-0 bg-cover bg-center z-0"
           style={{ backgroundImage: `url(${heroImageUrl})` }}
         >
-           <div className="absolute inset-0 bg-black/30 backdrop-blur-md"></div>
+          <div className="absolute inset-0 bg-black/30 backdrop-blur-md"></div>
         </div>
       )}
       <div className="relative z-10 w-full max-w-md p-8 space-y-6 bg-white/90 dark:bg-stone-800/90 backdrop-blur-sm rounded-lg shadow-2xl border border-white/20 dark:border-stone-700/50">
@@ -51,17 +57,18 @@ const LoginForm = () => {
           <div>
             <button
               type="submit"
-              className="w-full px-4 py-2 text-white bg-amber-700 rounded-md hover:bg-amber-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-amber-500 transition-colors dark:hover:bg-amber-600"
+              disabled={isLoading}
+              className="w-full px-4 py-2 text-white bg-amber-700 rounded-md hover:bg-amber-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-amber-500 transition-colors dark:hover:bg-amber-600 disabled:opacity-60 disabled:cursor-not-allowed"
             >
-              Login
+              {isLoading ? 'Checking…' : 'Login'}
             </button>
           </div>
         </form>
-         <div className="text-center">
-            <Link to="/" className="text-sm text-amber-700 dark:text-amber-500 hover:underline">
-              &larr; Back to Villa Website
-            </Link>
-          </div>
+        <div className="text-center">
+          <Link to="/" className="text-sm text-amber-700 dark:text-amber-500 hover:underline">
+            &larr; Back to Villa Website
+          </Link>
+        </div>
       </div>
     </div>
   );

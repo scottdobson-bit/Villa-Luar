@@ -108,9 +108,9 @@ const Chatbot = () => {
             {/* Floating Action Button */}
             <button
                 onClick={toggleChat}
-                className={`p-4 rounded-full shadow-2xl transition-all duration-300 transform hover:scale-110 focus:outline-none ${
+                className={`relative p-4 rounded-full shadow-2xl transition-all duration-300 transform hover:scale-110 focus:outline-none ${
                     isOpen ? 'bg-stone-600 text-white' : 'bg-amber-600 text-white hover:bg-amber-700'
-                }`}
+                } ${!isOpen ? 'chatbot-pulse' : ''}`}
                 aria-label="Open Chat"
             >
                 {isOpen ? (

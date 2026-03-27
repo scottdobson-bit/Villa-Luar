@@ -4,7 +4,57 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" id="favicon" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Villa Luar - For Sale</title>
+
+    <!-- Primary SEO -->
+    <title>Villa Luar — Luxury Villa For Sale in Spain</title>
+    <meta name="description" content="Villa Luar is a stunning luxury villa for sale in Spain, offering exceptional indoor/outdoor living, private pool, and breathtaking views. Arrange a private viewing today." />
+    <meta name="robots" content="index, follow" />
+    <link rel="canonical" href="https://villaluar.com/" />
+
+    <!-- Open Graph (Facebook, WhatsApp, LinkedIn) -->
+    <meta property="og:type"        content="website" />
+    <meta property="og:url"         content="https://villaluar.com/" />
+    <meta property="og:title"       content="Villa Luar — Luxury Villa For Sale in Spain" />
+    <meta property="og:description" content="A stunning luxury villa offering exceptional indoor/outdoor living, private pool, and breathtaking views. Arrange a private viewing." />
+    <meta property="og:image"       content="https://villaluar.com/og-image.jpg" />
+    <meta property="og:image:width"  content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:locale"      content="en_GB" />
+    <meta property="og:site_name"   content="Villa Luar" />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card"        content="summary_large_image" />
+    <meta name="twitter:title"       content="Villa Luar — Luxury Villa For Sale in Spain" />
+    <meta name="twitter:description" content="A stunning luxury villa offering exceptional indoor/outdoor living, private pool, and breathtaking views." />
+    <meta name="twitter:image"       content="https://villaluar.com/og-image.jpg" />
+
+    <!-- Schema.org structured data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "RealEstateListing",
+      "name": "Villa Luar",
+      "description": "Luxury villa for sale in Spain with private pool, gym, and breathtaking views.",
+      "url": "https://villaluar.com/",
+      "image": "https://villaluar.com/og-image.jpg",
+      "offers": {
+        "@type": "Offer",
+        "availability": "https://schema.org/InStock",
+        "priceCurrency": "EUR"
+      },
+      "address": {
+        "@type": "PostalAddress",
+        "addressCountry": "ES"
+      },
+      "contactPoint": {
+        "@type": "ContactPoint",
+        "telephone": "+34-711-013-086",
+        "contactType": "sales",
+        "email": "scott@villaluar.com"
+      }
+    }
+    </script>
+
     <script>
       // Prevents Flash of Unstyled Content (FOUC) for dark mode.
       if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
@@ -27,7 +77,7 @@
         scroll-behavior: smooth;
       }
     </style>
-    <!-- Calendly widget script -->
+    <!-- Calendly widget script — loaded once here, do not re-inject in components -->
     <script type="text/javascript" src="https://assets.calendly.com/assets/external/widget.js" async></script>
 <script type="importmap">
 {

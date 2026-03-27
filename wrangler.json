@@ -1,9 +1,16 @@
 {
   "name": "billowing-union-e34a",
+  "main": "worker.ts",
   "compatibility_date": "2024-11-23",
   "assets": {
     "directory": "./dist"
   },
+  "r2_buckets": [
+    {
+      "binding": "VILLA_LUAR_IMAGES",
+      "bucket_name": "villa-luar-images"
+    }
+  ],
   "observability": {
     "enabled": true
   }
