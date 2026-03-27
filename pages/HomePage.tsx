@@ -231,7 +231,7 @@ const HomePage = () => {
                 />
                 {/* Floating glass stat cards */}
                 <div className="absolute -bottom-5 left-1/2 -translate-x-1/2 flex gap-3 px-4">
-                  <StatCard value="4" label="Bedrooms" icon={<BedIcon />} />
+                  <StatCard value="5" label="Bedrooms" icon={<BedIcon />} />
                   <StatCard value="3" label="Bathrooms" icon={<BathIcon />} />
                   <StatCard value="Private" label="Pool" icon={<PoolIcon />} />
                   <StatCard value="350m²" label="Living" icon={<AreaIcon />} />
