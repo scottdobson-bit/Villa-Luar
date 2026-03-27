@@ -126,9 +126,9 @@ const CalendlyBookingSection = () => (
 const HomePage = () => {
   const { content, isLoading } = useContent();
   const galleryRef = useRef<PhotoGalleryHandle>(null);
-  const aboutRef   = useScrollReveal<HTMLElement>();
+  const aboutRef    = useScrollRevealChildren<HTMLDivElement>();
   const featuresRef = useScrollRevealChildren<HTMLDivElement>();
-  const locationRef = useScrollReveal<HTMLElement>();
+  const locationRef = useScrollRevealChildren<HTMLDivElement>();
   const bookingRef  = useScrollReveal<HTMLDivElement>();
 
   if (isLoading || !content) return <LoadingScreen />;
@@ -218,12 +218,8 @@ const HomePage = () => {
       <WaveDivider fromColor="bg-transparent" toColor="fill-white dark:fill-stone-900" />
 
       {/* ── About ─────────────────────────────────────────────────────────── */}
-      <section
-        id="about"
-        ref={aboutRef}
-        className="py-20 bg-white dark:bg-stone-900"
-      >
-        <div className="container mx-auto px-6 grid md:grid-cols-2 gap-16 items-center">
+      <section id="about" className="py-20 bg-white dark:bg-stone-900">
+        <div ref={aboutRef} className="container mx-auto px-6 grid md:grid-cols-2 gap-16 items-center reveal-stagger">
           {/* Image with floating stat cards */}
           {featuredImage && (
             <div className="reveal-left order-last md:order-first relative">
@@ -272,13 +268,10 @@ const HomePage = () => {
 
       {/* ── Location ──────────────────────────────────────────────────────── */}
       {location && (
-        <section
-          ref={locationRef}
-          className="reveal py-20 bg-stone-100 dark:bg-stone-900"
-        >
+        <section className="py-20 bg-stone-100 dark:bg-stone-900">
           <div className="container mx-auto px-6">
             <SectionHeading>{location.title}</SectionHeading>
-            <div className="grid md:grid-cols-2 gap-16 items-center max-w-5xl mx-auto">
+            <div ref={locationRef} className="grid md:grid-cols-2 gap-16 items-center max-w-5xl mx-auto">
               <div className="reveal-left text-center md:text-left">
                 <p className="text-stone-600 dark:text-stone-300 leading-relaxed whitespace-pre-line text-lg">
                   {location.description}
