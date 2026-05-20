@@ -9,6 +9,8 @@ import MainImageManager from './MainImageManager';
 import LocationManager from './LocationManager';
 import ThemeToggle from './ThemeToggle';
 import { VillaContent } from '../types';
+import { publishToServer } from '../services/contentService';
+import { CONTENT_API_KEY } from '../constants';
 
 type Tab = 'mainImages' | 'location' | 'photos' | 'text' | 'faqs';
 
@@ -144,6 +146,24 @@ const AdminPanel = () => {
         saveChanges(() => setToast({ show: true, message: 'Draft saved locally!' }));
     };
 
+    const handlePublishLive = async () => {
+        if (!draftContent) {
+            alert("No content available to publish.");
+            return;
+        }
+        if (!CONTENT_API_KEY) {
+            alert("VITE_CONTENT_API_KEY is not set. Add it to your Cloudflare build environment variables.");
+            return;
+        }
+        try {
+            await publishToServer(draftContent, CONTENT_API_KEY);
+            setToast({ show: true, message: 'Published live! Changes are now visible to all visitors.' });
+        } catch (error: any) {
+            console.error("Publish failed:", error);
+            alert(`Publish failed: ${error?.message ?? 'Unknown error'}`);
+        }
+    };
+
     const renderTabContent = () => {
         switch (activeTab) {
             case 'mainImages':
@@ -200,12 +220,18 @@ const AdminPanel = () => {
                             Download JSON
                         </button>
 
-                        <button 
-                            onClick={handleSaveChanges} 
-                            disabled={!isDirty} 
+                        <button
+                            onClick={handleSaveChanges}
+                            disabled={!isDirty}
                             className="px-6 py-2 text-sm font-medium text-white bg-stone-600 rounded-md hover:bg-stone-700 disabled:bg-stone-400 disabled:cursor-not-allowed transition-colors dark:bg-stone-700 dark:hover:bg-stone-600 dark:disabled:bg-stone-800"
                         >
                             Save Draft
+                        </button>
+                        <button
+                            onClick={handlePublishLive}
+                            className="px-6 py-2 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700 transition-colors shadow-md dark:bg-blue-700 dark:hover:bg-blue-600"
+                        >
+                            Publish Live
                         </button>
                         <button onClick={logout} className="px-4 py-2 text-sm font-medium text-red-600 hover:text-red-800 dark:text-red-400">
                             Logout
@@ -223,8 +249,9 @@ const AdminPanel = () => {
                             </p>
                             <ol className="list-decimal list-inside mt-2 space-y-1 ml-1">
                                 <li>Make your edits here and click <strong>Save Draft</strong>.</li>
-                                <li><strong>Option A (Manual):</strong> Click <strong>Download JSON</strong> (this file contains all images & text) and replace <code className="bg-white dark:bg-stone-800 px-1 rounded">public/villa-content.json</code> in the codebase.</li>
-                                <li><strong>Option B (AI Assist):</strong> Click <strong>Copy Data for AI</strong> and tell the AI: <em>"Update the app with this data."</em></li>
+                                <li><strong>Option A (Instant):</strong> Click <strong>Publish Live</strong> — changes go live immediately via the cloud API (requires <code className="bg-white dark:bg-stone-800 px-1 rounded">VITE_CONTENT_API_KEY</code> set in Cloudflare).</li>
+                                <li><strong>Option B (Manual):</strong> Click <strong>Download JSON</strong> and replace <code className="bg-white dark:bg-stone-800 px-1 rounded">public/villa-content.json</code> in the codebase, then redeploy.</li>
+                                <li><strong>Option C (AI Assist):</strong> Click <strong>Copy Data for AI</strong> and tell the AI: <em>"Update the app with this data."</em></li>
                             </ol>
                         </div>
                          <button 

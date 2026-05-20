@@ -165,3 +165,19 @@ export const clearDraftContent = async (): Promise<void> => {
     console.error("Failed to clear draft from DB:", error);
   }
 };
+
+export const publishToServer = async (content: VillaContent, apiKey: string): Promise<void> => {
+  const response = await fetch('/api/content', {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${apiKey}`,
+    },
+    body: JSON.stringify(content),
+  });
+
+  if (!response.ok) {
+    const text = await response.text().catch(() => response.statusText);
+    throw new Error(`Publish failed (${response.status}): ${text}`);
+  }
+};

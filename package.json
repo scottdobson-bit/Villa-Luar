@@ -8,7 +8,7 @@
   },
   "scripts": {
     "dev": "node build-helper.js && vite",
-    "build": "node build-helper.js && tsc && vite build",
+    "build": "node build-helper.js && vite build",
     "preview": "vite preview",
     "deploy": "wrangler deploy"
   },

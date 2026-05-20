@@ -14,7 +14,13 @@ export const ADMIN_PASSWORD_HASH: string =
 export const CALENDLY_URL = 'https://calendly.com/scott-cobellon/new-meeting';
 
 // --- CLOUD CONFIGURATION ---
-export const PRODUCTION_CONFIG_URL = '';
+// Set to '/api/content' to serve live content from KV via the Worker.
+// Falls back to /villa-content.json if empty (local dev or KV not yet set up).
+export const PRODUCTION_CONFIG_URL = import.meta.env.VITE_CONTENT_API_URL ?? '/api/content';
+
+// API key for publishing content to the Worker's KV store.
+// Must match the CONTENT_API_KEY secret configured in the Cloudflare Worker.
+export const CONTENT_API_KEY: string = import.meta.env.VITE_CONTENT_API_KEY ?? '';
 
 // specific helper to unwrap the module if it has a default export
 const unwrapContent = (data: any): VillaContent => {
