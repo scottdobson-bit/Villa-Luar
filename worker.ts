@@ -111,7 +111,12 @@ if (!content) return jsonResponse({ error: 'Content not found' }, 404);
       return jsonResponse({ ok: true, url: `/images/${sanitizedKey}` });
     }
 
-    // ── Static assets ────────────────────────────────────────────────────────
-    return env.ASSETS.fetch(request);
+    // ── Static assets (SPA fallback) ─────────────────────────────────────────
+    const assetResponse = await env.ASSETS.fetch(request);
+    if (assetResponse.status === 404) {
+      // Serve index.html for all unmatched paths so client-side routing works
+      return env.ASSETS.fetch(new Request(new URL('/', request.url).toString(), request));
+    }
+    return assetResponse;
   },
 };
