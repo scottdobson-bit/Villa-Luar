@@ -9,7 +9,7 @@ import contentRaw from './public/villa-content.json';
 // Generate a new hash: echo -n "your-password" | sha256sum
 export const ADMIN_PASSWORD_HASH: string =
   import.meta.env.VITE_ADMIN_PASSWORD_HASH ||
-  'e3b5bb054314c83c36f62926885156f41d55c20b1060e4456dab4c79f3ced83a';
+  '25387a750093bd7522f8ca0e23210677e6ce21bc13fa64ce87cc3e1b1ba55447';
 
 export const CALENDLY_URL = 'https://calendly.com/scott-cobellon/new-meeting';
 
