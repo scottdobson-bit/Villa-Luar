@@ -38,7 +38,8 @@ function isAuthorized(request: Request, env: Env): boolean {
 export default {
   async fetch(request: Request, env: Env): Promise<Response> {
     const url = new URL(request.url);
-    const { pathname, method } = url;
+    const { pathname } = url;
+    const method = request.method;
 
     // CORS preflight
     if (method === 'OPTIONS') {
@@ -64,7 +65,7 @@ export default {
     // ── GET /api/content ─────────────────────────────────────────────────────
     if (pathname === '/api/content' && method === 'GET') {
       const content = await env.VILLA_CONTENT.get('villa-content');
-      if (!content) return jsonResponse({ error: 'Content not found' }, 404);
+if (!content) return jsonResponse({ error: 'Content not found' }, 404);
 
       return new Response(content, {
         headers: {

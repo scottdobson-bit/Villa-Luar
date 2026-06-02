@@ -1,0 +1,462 @@
+{
+  "logoUrl": "/images/logourl.svg",
+  "faviconUrl": "/images/faviconurl.svg",
+  "gallerySections": [
+    {
+      "id": "villa-outdoors",
+      "title": "Villa Outdoors",
+      "subSections": [
+        {
+          "id": "pool-area",
+          "title": "Pool Area",
+          "photos": [
+            {
+              "id": "8a9a3bdb-e1e6-4f16-8faf-05ca8748ed4a",
+              "url": "/images/gallerysections-0-subsections-0-photos-0-url.jpg",
+              "caption": "Terrace & Pool",
+              "description": "Discover your private Spanish oasis under a brilliant blue sky. Immerse yourself in the sparkling pool, then relax on comfortable loungers amidst vibrant desert flora. White stucco and warm wood create a serene backdrop for unforgettable al fresco moments, embodying the ultimate high-end outdoor living."
+            },
+            {
+              "id": "0d27cddf-3a65-4f62-bcbd-4720d08da05f",
+              "url": "/images/gallerysections-0-subsections-0-photos-1-url.jpg",
+              "caption": "Terrace & Pool",
+              "description": "Immerse yourself in serenity. This exquisite villa offers a sun-drenched private oasis, featuring a sparkling azure pool and elegant loungers amidst unique volcanic landscaping. Crisp white architecture under a boundless blue sky evokes an unparalleled sense of tranquil, high-end living."
+            },
+            {
+              "id": "befefaaf-eab3-4eb4-99a7-4667a89ef8ee",
+              "url": "/images/gallerysections-0-subsections-0-photos-2-url.jpg",
+              "caption": "Sun Loungers",
+              "description": "Bask in a sun-drenched haven where a sparkling azure pool meets pristine white architecture. Chic blue loungers invite ultimate relaxation amidst unique, artfully landscaped desert gardens. Your private Spanish escape awaits."
+            },
+            {
+              "id": "eecd6d5a-0b7a-48ad-86ec-e387ac040006",
+              "url": "/images/gallerysections-0-subsections-0-photos-3-url.jpg",
+              "caption": "Pool",
+              "description": "Dive into your private azure oasis, where the sun-drenched terrace and refreshing pool promise blissful relaxation. Enjoy the stylish pergola and unique cactus garden, perfectly blending luxury with the vibrant Spanish landscape for an unparalleled outdoor living experience."
+            },
+            {
+              "id": "b69df0ba-4317-498f-9c92-930230110f31",
+              "url": "/images/gallerysections-0-subsections-0-photos-4-url.jpg",
+              "caption": "Sun Loungers",
+              "description": "Indulge in sun-drenched leisure on plush blue loungers, set against an iconic white villa wall. The serene poolside, adorned with striking cacti and warm terracotta tiles, offers a private oasis under a brilliant azure sky."
+            }
+          ]
+        },
+        {
+          "id": "terrace",
+          "title": "Terrace",
+          "photos": [
+            {
+              "id": "1ae4e33c-0f34-4e53-9d2c-903005c1c86e",
+              "url": "/images/gallerysections-0-subsections-1-photos-0-url.jpg",
+              "caption": "Pergola",
+              "description": "Embrace al fresco luxury in your private Spanish villa. A handcrafted wooden pergola offers stylish shade over an inviting dining area, ideal for sun-kissed gatherings. Host unforgettable barbecues amid serene, drought-tolerant gardens, under an endless blue sky."
+            },
+            {
+              "id": "44822280-b796-4cda-b759-66f7a0281491",
+              "url": "/images/gallerysections-0-subsections-1-photos-1-url.jpg",
+              "caption": "Pergola Seating",
+              "description": "Savor sun-drenched serenity from plush outdoor seating, framed by warm wooden pillars. Gaze upon the sparkling pool and vibrant desert garden, enhanced by thoughtful blue accents. This sophisticated patio offers a private sanctuary for ultimate relaxation and stylish al fresco living."
+            },
+            {
+              "id": "9ec54b50-7d28-4e9b-b0f0-6c434f78a9bc",
+              "url": "/images/gallerysections-0-subsections-1-photos-2-url.jpg",
+              "caption": "Garden view of Pool",
+              "description": "Discover your private oasis where sleek white architecture harmonizes with a vibrant volcanic garden. Sun-drenched days beckon by the sparkling pool, inviting relaxation on plush loungers. Enjoy sophisticated al fresco living under the elegant wooden pergola, embodying the ultimate luxurious escape."
+            },
+            {
+              "id": "f740fd6c-f003-4aa5-adcc-d55f3525123b",
+              "url": "/images/gallerysections-0-subsections-1-photos-3-url.jpg",
+              "caption": "Pergola Dining & BBQ",
+              "description": "Embrace sun-kissed moments on this luxurious terrace, where a custom wooden pergola provides elegant shade for al fresco dining. The integrated barbecue, with its inviting flames, promises delightful culinary gatherings. Discover the authentic charm of Spanish outdoor living."
+            },
+            {
+              "id": "905ea4de-50f2-41d3-88b3-dd6f1c704d1f",
+              "url": "/images/gallerysections-0-subsections-1-photos-4-url.jpg",
+              "caption": "BBQ view of Chillout Zone",
+              "description": "Savor unparalleled outdoor living in this private Spanish villa. Enjoy al fresco dining from the bespoke BBQ, relax on plush lounge seating amidst verdant landscaping, and bask under endless blue skies. An idyllic setting for cherished moments."
+            }
+          ]
+        },
+        {
+          "id": "2f9e247d-7edb-4348-ac41-ae3fa59f09a6",
+          "title": "Chillout Zone",
+          "photos": [
+            {
+              "id": "a1029703-402d-4b66-872b-9a27931c69b9",
+              "url": "/images/gallerysections-0-subsections-2-photos-0-url.jpg",
+              "caption": "Chillout Seating",
+              "description": "Embrace serene al fresco living on this sun-drenched terrace. Chic grey furnishings, natural bamboo, and lush green turf create a private oasis. Unwind with a glass of champagne and a captivating book, luxuriating in effortless Spanish charm under an endless blue sky."
+            },
+            {
+              "id": "ab1977d8-7c57-466b-9d6a-9ba9ea90af5d",
+              "url": "/images/gallerysections-0-subsections-2-photos-1-url.jpg",
+              "caption": "Grden View from Chilout Zone",
+              "description": "Discover serene relaxation in this exquisite Spanish villa. Luxurious outdoor seating, natural wood accents, and pristine white walls frame a vibrant desert garden leading to your private pool. Unwind with a good book and a glass of Cava, embracing the tranquil lifestyle."
+            }
+          ]
+        },
+        {
+          "id": "c8878dc9-f7ec-46b3-9caf-f3a1bf1b5f45",
+          "title": "Entrance",
+          "photos": [
+            {
+              "id": "5e043781-0e20-4230-9212-6e5f6cc6d8d9",
+              "url": "/images/gallerysections-0-subsections-3-photos-0-url.jpg",
+              "caption": "Villa & Basement Entrance & Villa Luar Logo",
+              "description": "Embrace tranquil moments on your private, sun-kissed terrace. Pristine white walls frame bespoke metal art, while inviting wooden furnishings with serene blue accents offer pure relaxation. Your personal oasis at Villa Lunar awaits."
+            }
+          ]
+        },
+        {
+          "id": "d8eeb0ce-329d-44ec-99c6-0197215f8c04",
+          "title": "Logo",
+          "photos": [
+            {
+              "id": "6a41a30b-c1d6-46a9-a23c-a7ed6accf522",
+              "url": "/images/gallerysections-0-subsections-4-photos-0-url.jpg",
+              "caption": "Logo",
+              "description": "White On Black"
+            },
+            {
+              "id": "0e5678d5-2464-4c84-991b-03718e88c370",
+              "url": "/images/gallerysections-0-subsections-4-photos-1-url.jpg",
+              "caption": "Logo",
+              "description": "Black On White"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "villa-indoors",
+      "title": "Villa Indoors",
+      "subSections": [
+        {
+          "id": "living-area",
+          "title": "Living Room",
+          "photos": [
+            {
+              "id": "2478b6fb-ddb0-4ee7-a54b-9a7d3d0c834d",
+              "url": "/images/gallerysections-1-subsections-0-photos-0-url.jpg",
+              "caption": "Sofa",
+              "description": "Unwind in sun-drenched comfort. This inviting living area boasts a plush corner sofa and direct access to your private pool patio, perfect for seamless indoor-outdoor living. Modern design, vibrant art, and a refreshing ceiling fan create an idyllic Spanish villa escape."
+            },
+            {
+              "id": "83e76acd-ce80-4a2f-be4a-173415b96061",
+              "url": "/images/gallerysections-1-subsections-0-photos-1-url.jpg",
+              "caption": "Seating & TV",
+              "description": "Step into a sun-drenched haven where sophisticated design meets tranquil escape. Expansive glass doors blur the lines between luxurious indoor comfort and your private, serene patio oasis, complete with inviting loungers. Experience the ultimate high-end Spanish villa lifestyle."
+            }
+          ]
+        },
+        {
+          "id": "f3ad475a-a925-4637-bee0-1136d8fab487",
+          "title": "Dining Room",
+          "photos": [
+            {
+              "id": "f39f41ab-0c9c-4f8c-bd45-652fa5fb0b1a",
+              "url": "/images/gallerysections-1-subsections-1-photos-0-url.jpg",
+              "caption": "Dining",
+              "description": "Savor elegant meals in this sun-drenched dining space, where a sleek glass table and plush, upholstered chairs invite convivial gatherings. Expansive patio doors seamlessly blend indoor luxury with an inviting outdoor lifestyle, while curated travel art evokes the island's unique charm and relaxed ambiance."
+            },
+            {
+              "id": "f64538fc-1833-4381-bd8c-2febde6b0922",
+              "url": "/images/gallerysections-1-subsections-1-photos-1-url.jpg",
+              "caption": "Dining",
+              "description": "Enter a realm of contemporary sophistication, where culinary artistry meets stylish entertaining. This open-plan space features a sleek, fully-equipped kitchen, a chic glass dining table, and a captivating gallery wall, crafting an inviting ambiance perfect for relaxed Spanish living."
+            }
+          ]
+        },
+        {
+          "id": "kitchen",
+          "title": "Kitchen",
+          "photos": [
+            {
+              "id": "53d92e66-e5b1-4cb4-b486-36d325b7d9d3",
+              "url": "/images/gallerysections-1-subsections-2-photos-0-url.jpg",
+              "caption": "Kitchen",
+              "description": "Step into the heart of this Spanish villa, where a sleek, modern kitchen awaits. White cabinetry, a chic tiled backsplash, and gleaming stainless steel appliances blend functionality with sophisticated style. A unique round window bathes the space in natural light, creating an inviting atmosphere for culinary delights."
+            }
+          ]
+        },
+        {
+          "id": "bedrooms",
+          "title": "Bedrooms",
+          "photos": [
+            {
+              "id": "6af006bf-c063-4afe-8fa9-8a690a966c96",
+              "url": "/images/gallerysections-1-subsections-3-photos-0-url.jpg",
+              "caption": "Bedroom 1 = Master with En-Suite",
+              "description": "Experience tranquil luxury in this beautifully appointed bedroom. A plush olive green headboard and crisp linens invite repose. Seamlessly transition to your private, sparkling pool through elegant sliding doors, epitomizing the ultimate indoor-outdoor Spanish lifestyle."
+            },
+            {
+              "id": "b81df3ea-8d37-4c56-9326-a043131c0eab",
+              "url": "/images/gallerysections-1-subsections-3-photos-1-url.jpg",
+              "caption": "Master Storage",
+              "description": "Discover serene comfort in this bright bedroom, featuring a striking green upholstered headboard and crisp white linens. Enjoy perfect climate control with both a modern ceiling fan and sleek air conditioning. Ample custom-fitted wooden wardrobes complete this elegant, tranquil retreat."
+            },
+            {
+              "id": "a2a5e668-5fdb-4730-ba8e-c76ff13763f5",
+              "url": "/images/gallerysections-1-subsections-3-photos-2-url.jpg",
+              "caption": "Bedroom 2",
+              "description": "Awaken to sunlit serenity in this chic Spanish retreat. A bold blue headboard grounds the airy space, while expansive glass doors seamlessly invite the vibrant outdoor terrace in. Experience effortless comfort and stylish indoor-outdoor living."
+            },
+            {
+              "id": "7daac6fc-6e64-4fc6-a168-caad1901a3b1",
+              "url": "/images/gallerysections-1-subsections-3-photos-3-url.jpg",
+              "caption": "Bedroom 2 Storage",
+              "description": "Wake up to serene luxury in this inviting bedroom, featuring bespoke wooden wardrobes and direct access to your private, sun-kissed pool terrace. Seamless indoor-outdoor living defines this tranquil Spanish villa experience."
+            },
+            {
+              "id": "01a6953b-eda9-46d8-bba8-fbb828ccd056",
+              "url": "/images/gallerysections-1-subsections-3-photos-4-url.jpg",
+              "caption": "Bedroom 3 Bunk Room",
+              "description": "Step into serenity in this sun-drenched guest room. Thoughtfully designed with bespoke sleeping arrangements, natural textures, and vibrant artistic touches, it offers a refreshing, comfortable retreat for family and friends within your luxurious Spanish villa."
+            }
+          ]
+        },
+        {
+          "id": "a6411f84-b32b-4d2c-9e6a-fa7758794776",
+          "title": "Bathrooms",
+          "photos": [
+            {
+              "id": "1b08907d-315b-4a09-aa26-1f2a9e7d9ebc",
+              "url": "/images/gallerysections-1-subsections-4-photos-0-url.jpg",
+              "caption": "En-Suite to Master",
+              "description": "Indulge in this villa's chic bathroom, where warm tiles meet elegant wood accents. A sleek floating vanity, modern fixtures, and thoughtful details like the wall-mounted hairdryer elevate your daily routine. Relax in style amidst serene, natural elements."
+            },
+            {
+              "id": "aa6c02b6-803d-438c-9297-92d04f61c007",
+              "url": "/images/gallerysections-1-subsections-4-photos-1-url.jpg",
+              "caption": "Family Shower Room",
+              "description": "Discover serene indulgence in this refined bathroom. Polished stone tiles, a frameless glass shower, and a sleek floating vanity create a tranquil escape. Accentuated by a vibrant mosaic band and fresh orchid, it offers sophisticated comfort."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "basement-outdoors",
+      "title": "Basement Outdoors",
+      "subSections": [
+        {
+          "id": "patio",
+          "title": "Lower Patio",
+          "photos": [
+            {
+              "id": "051bea8a-1c0d-40fc-b498-e601acbc9d75",
+              "url": "/images/gallerysections-2-subsections-0-photos-0-url.jpg",
+              "caption": "Lower Terrace & Driveway",
+              "description": "Bask in the brilliant Spanish sun within your private villa oasis. Crisp white architecture meets warm wooden lounging, offering tranquil moments by the shaded jacuzzi or delightful al fresco sips under the expansive blue sky."
+            },
+            {
+              "id": "375e46df-9b94-46b5-826a-63cddc61abf6",
+              "url": "/images/gallerysections-2-subsections-0-photos-1-url.jpg",
+              "caption": "Terrace Seating",
+              "description": "Indulge in sun-drenched leisure within this chic outdoor haven. Crisp white walls frame a luxurious hot tub, elegant wooden seating, and a fun ping-pong table, perfect for sophisticated entertainment. Enjoy ultimate relaxation and vibrant Spanish living in your private retreat."
+            },
+            {
+              "id": "d61a8db8-436a-48f3-860f-8feaeca650a7",
+              "url": "/images/gallerysections-2-subsections-0-photos-2-url.jpg",
+              "caption": "Hot Tub",
+              "description": "Unwind in your secluded hot tub sanctuary, framed by an elegant wooden canopy adorned with ambient string lights. Fresh towels await, inviting you to indulge in bubbly relaxation amidst the pristine white walls of your luxurious Spanish villa. Pure bliss."
+            },
+            {
+              "id": "37ad19e7-5f8b-4573-8360-c3152578147a",
+              "url": "/images/gallerysections-2-subsections-0-photos-3-url.jpg",
+              "caption": "Table Tennis",
+              "description": "Unwind in your private recreational haven. This premium ping-pong setup, featuring sleek paddles and a crisp white ball, promises spirited afternoons and lively competition. Experience leisurely luxury and create cherished memories within your exquisite Spanish villa."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "basement-indoors",
+      "title": "Basement Indoors",
+      "subSections": [
+        {
+          "id": "gym",
+          "title": "Living Room",
+          "photos": [
+            {
+              "id": "41bd7448-5375-4ca2-bcc4-7009783ee546",
+              "url": "/images/gallerysections-3-subsections-0-photos-0-url.jpg",
+              "caption": "Living room view from Pool Table",
+              "description": "Discover sophisticated leisure in this bright Spanish villa. The open-plan living area, adorned with sleek materials, seamlessly blends relaxation with vibrant entertainment. Gather around the professional pool table for unforgettable moments with loved ones."
+            },
+            {
+              "id": "ba0ec457-0ceb-4103-a82a-a54e0f325391",
+              "url": "/images/gallerysections-3-subsections-0-photos-1-url.jpg",
+              "caption": "Pool Table",
+              "description": "Immerse yourself in modern Spanish leisure. This villa's bright, open space features a stylish pool table, promising endless entertainment. Clean lines, natural light, and elegant finishes craft an inviting ambiance for a refined lifestyle."
+            },
+            {
+              "id": "0ffe772c-e587-42d6-93fc-b9c308c0c530",
+              "url": "/images/gallerysections-3-subsections-0-photos-2-url.jpg",
+              "caption": "Sofa for Cinema",
+              "description": "Experience unparalleled comfort and chic design in this expansive open-plan sanctuary. Plush seating invites relaxation, while the sleek modern kitchen and a dedicated billiards area promise sophisticated entertaining. Every detail, from stylish accents to versatile spaces, crafts an exceptional lifestyle."
+            },
+            {
+              "id": "cbd85feb-99e5-4010-a125-c449d7b53c0c",
+              "url": "/images/gallerysections-3-subsections-0-photos-3-url.jpg",
+              "caption": "65' UHD TV",
+              "description": "Discover contemporary comfort in this luminous lounge. The plush sectional and ambient lighting invite relaxation, while sleek white cabinetry and a chic area rug add sophistication. A dedicated entertainment zone with a pool table promises endless leisure and stylish gatherings."
+            }
+          ]
+        },
+        {
+          "id": "5ace4440-5bfb-4c47-87ec-992679bdd66b",
+          "title": "Dining Room",
+          "photos": [
+            {
+              "id": "33d2e56d-988a-4a61-8817-7841ff6640f9",
+              "url": "/images/gallerysections-3-subsections-1-photos-0-url.jpg",
+              "caption": "Dining table",
+              "description": "Sun-drenched interiors blend modern elegance with effortless leisure. Sleek dark wood cabinetry and pristine white surfaces define the contemporary kitchen, opening to a vibrant entertaining space and a private outdoor haven. Ideal for luxurious Spanish living."
+            }
+          ]
+        },
+        {
+          "id": "056927ee-d69c-4dff-bcea-86ce4380c03d",
+          "title": "Kitchen",
+          "photos": [
+            {
+              "id": "6855ef7f-6d7c-4b1c-bfe2-b4e73c0b2edb",
+              "url": "/images/gallerysections-3-subsections-2-photos-0-url.jpg",
+              "caption": "Dishwasher, Oven, Microwave, Hob, Washing Machine",
+              "description": "Discover this exquisite kitchen, where warm wood meets cutting-edge stainless steel. Industrial-chic accents adorn the high ceilings, while expansive glass doors unveil seamless indoor-outdoor allure. This sun-drenched space in your Spanish villa offers sophisticated living, perfect for entertaining."
+            },
+            {
+              "id": "c743bf6a-66c3-480b-8f8d-fda5da0a6a98",
+              "url": "/images/gallerysections-3-subsections-2-photos-1-url.jpg",
+              "caption": "American Fridge/Freezer/Ice Maker",
+              "description": "Culinary artistry meets contemporary design in this villa's luminous kitchen. Sleek dark wood, integrated stainless steel, and pristine subway tile set the stage. Large glass doors invite seamless indoor-outdoor living, embodying sophisticated comfort perfect for entertaining."
+            }
+          ]
+        },
+        {
+          "id": "basement-bedrooms",
+          "title": "Bedrooms",
+          "photos": [
+            {
+              "id": "191c3ddb-cdfb-4a70-bbd5-072ed7013862",
+              "url": "/images/gallerysections-3-subsections-3-photos-0-url.jpg",
+              "caption": "Bedroom 4",
+              "description": "Unwind in serene luxury within this bright, minimalist bedroom. Crisp white finishes, a chic glass-top vanity, and plush grey bedding create an elegant sanctuary. A tranquil retreat promising peaceful nights and stylish comfort in your Spanish villa."
+            },
+            {
+              "id": "9a7a68a7-02e6-424e-b8c2-7cdfd956ab32",
+              "url": "/images/gallerysections-3-subsections-3-photos-1-url.jpg",
+              "caption": "Bedroom 4",
+              "description": "Effortless elegance defines this bright space. Custom white wardrobes with mirrored panels reflect light, enhancing the tranquil atmosphere. A chic glass-topped vanity and delicate chair invite serene mornings, embodying a lifestyle of refined comfort and pristine design."
+            },
+            {
+              "id": "66c7118c-c9cc-4e72-9b3a-b69df0343a70",
+              "url": "/images/gallerysections-3-subsections-3-photos-2-url.jpg",
+              "caption": "Bedroom 5",
+              "description": "Experience tranquil comfort in this inviting twin bedroom. Crisp linens and natural wood accents frame a serene beach vista, while warm, ambient lighting ensures peaceful relaxation. A perfectly designed retreat within your exquisite Spanish villa."
+            },
+            {
+              "id": "b0bde8c1-34e5-4dea-aede-bf003fdc3520",
+              "url": "/images/gallerysections-3-subsections-3-photos-3-url.jpg",
+              "caption": "Bedroom 5",
+              "description": "Discover tranquil serenity in this bright, minimalist sanctuary. Light wood touches and sumptuous linens create a welcoming haven, while unique patterned flooring and modern comforts like air conditioning promise a stylish, restful retreat within your villa."
+            }
+          ]
+        },
+        {
+          "id": "7ef96fbf-b78d-4475-9706-7364cd003269",
+          "title": "Bathroom",
+          "photos": [
+            {
+              "id": "7eee47c9-d57a-40cd-90e3-e4824a610b6f",
+              "url": "/images/gallerysections-3-subsections-4-photos-0-url.jpg",
+              "caption": "Substantial Shower Room with Sink, Toilet and Shower ",
+              "description": "Discover a sanctuary where modern design meets playful elegance. This bright, contemporary bathroom features sleek glass and pristine subway tiles, grounded by sophisticated stone flooring. Enjoy invigorating showers and delightful touches of tropical art, crafting a refreshing start or end to your luxurious Spanish day."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "photos": [],
+  "faqs": [
+    {
+      "id": "faq1",
+      "question": "What is the total size of the property?",
+      "answer": "The villa has a total size of 220 square meters, with 110sqm on the ground floor and another 110sqm in the self-contained basement."
+    },
+    {
+      "id": "faq2",
+      "question": "How many bedrooms and bathrooms are there?",
+      "answer": "There are 5 bedrooms, sleeping 10 people, and 5 bathrooms. Each bedroom has its own dedicated air conditioning."
+    },
+    {
+      "id": "faq3",
+      "question": "Is there a pool and hot tub?",
+      "answer": "Yes, the villa features a large 9x5 meter heated pool and a private hot tub with 100% privacy."
+    },
+    {
+      "id": "faq4",
+      "question": "What are the local amenities?",
+      "answer": "The villa is situated in a prestigious and quiet area of Lanzarote, just a 15-minute walk from the best local beaches and restaurants."
+    },
+    {
+      "id": "faq5",
+      "question": "Is there parking available?",
+      "answer": "Yes, there is private, gated parking with space for two vehicles."
+    }
+  ],
+  "textContent": {
+    "heroTitle": "Villa Luar",
+    "heroSubtitle": "A luxurious 5 double bedroom villa in Residential Costa Papagayo, Playa Blanca, Lanzarote, where modern comfort meets spectacular volcanic landscapes. Offers over €575,000 will be considered. With a net yield of 10% per annum, Villa Luar is a great investment opportunity as well as a fantastic place to enjoy your new life in the Canary Islands. ",
+    "heroImageUrl": "/images/textcontent-heroimageurl.jpg",
+    "aboutTitle": "Your Private Sanctuary in Lanzarote",
+    "aboutText": "Nestled in a prestigious and quiet area of Lanzarote, Villa Luar is more than a home; it's an exclusive retreat. This beautifully designed residence offers stunning volcanic mountain views, ultimate privacy, and a seamless blend of modern architecture with the island's natural beauty. Every detail has been crafted to provide an experience of comfort, elegance, and serenity. Situated in a quiet cul-de-sac, Villa Luar is in a mature area of Playa Blanca so building works are very rare and silence is almost guaranteed 24/7.",
+    "featuresTitle": "Key Features & Amenities",
+    "features": [
+      {
+        "id": "feat1",
+        "name": "Large Heated Pool",
+        "detail": "Enjoy the 9x5m heated pool year-round with mountain views."
+      },
+      {
+        "id": "feat2",
+        "name": "Private Hot Tub",
+        "detail": "100% privacy for evening relaxation under the stars."
+      },
+      {
+        "id": "feat3",
+        "name": "Slate Bed Pool Table & Table Tennis Table",
+        "detail": "Stay active with games while relaxing in the sun."
+      },
+      {
+        "id": "feat4",
+        "name": "5 Air-Conditioned Bedrooms",
+        "detail": "Each bedroom is a private, air-conditioned suite."
+      },
+      {
+        "id": "feat5",
+        "name": "High-Speed Wi-Fi",
+        "detail": "600Mbps fibre broadband throughout the property. "
+      },
+      {
+        "id": "feat6",
+        "name": "Secure Gated Parking",
+        "detail": "Private parking area with space for two vehicles."
+      }
+    ],
+    "considerationsTitle": "Important Considerations",
+    "considerationsText": "PROPERTY SITUATION\nThe property is currently under contract with Solmar / Jet2 Villas. The contract runs until January 4th 2027 currently with a break clause which can be activated before the end of June 2026. This means that any purchaser can either extend or cancel the contract before this time. Any interested parties can view the property within a small window i.e. January 12th, 14th or 16th 2026.\n\nACCESSABILITY INFORMATION\nTo access the villa there is a path which is 100cm wide, there is also a ramp down to the lower ground floor patio doors, however this ramp is quite steep. Please bear this in mind. The front door has a width of 74cm whilst the door to the terrace is 76cm wide. There is 1 step up to the front door. The path to the pool area is 400cm wide, where the terrace is flat and tiled. There is 1 small step over the patio doors. The pool itself requires step access. The bedrooms on the ground floor have a door width of 67cm, whilst the master bathroom door is 67cm wide. There are 17 steps to the lower ground floor (external access only), where the door into the largest bedroom is 70cm wide, and the shower room door is 74cm wide. The door into the lounge/kitchen is 74cm wide. The ground floor is level with the pool area.",
+    "locationTitle": "Prime Location",
+    "locationText": "Located in the prestigious Costa Papagayo area of Playa Blanca, Villa Luar offers the perfect balance of tranquility and convenience. You are just a short walk away from the vibrant town center, stunning golden beaches, and a wide array of restaurants and shops. Explore the unique volcanic landscapes of Lanzarote or simply relax in your private oasis.",
+    "locationImageUrl": "/images/textcontent-locationimageurl.jpg"
+  },
+  "location": {
+    "title": "Location",
+    "description": "Located a 25-minute stroll from the heart of Playa Blanca, we find Villa Luar. A beautiful five-bedroom property, great for up to ten guests. Whilst you're not far from the centre of the resort, Villa Luar may tempt you to stay poolside and enjoy your own private terrace with a heated* pool. The terrace features reclining sun loungers and cosy rattan furniture for your morning coffees and afternoon cocktails poolside. For tapas lunches and alfresco feasts, the villa also features a brick-built BBQ and a pergola area for all to enjoy. \n\nInside, the villa is modern with an open-plan living room and kitchen, featuring a smart TV and patio doors which let in floods of natural sunlight. There are three bedrooms on the ground floor, all with air conditioning for your comfort. On the ground level there is a covered access to an internal stairway leading to the lower ground level, this features a further two bedrooms also with air conditioning, a second living room, kitchen and dining table. ",
+    "imageUrl": "/images/location-imageurl.jpg"
+  }
+}
