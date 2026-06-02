@@ -15,6 +15,10 @@ export default defineConfig(({ mode }) => {
       alias: {
         '@': path.resolve((process as any).cwd(), './'),
       },
+      conditions: ['browser', 'module', 'import', 'default'],
+    },
+    optimizeDeps: {
+      include: ['react-router-dom', 'react-router'],
     },
     define: {
       'process.env': {
