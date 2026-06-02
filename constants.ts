@@ -14,7 +14,7 @@ export const ADMIN_PASSWORD_HASH: string =
 export const CALENDLY_URL = 'https://calendly.com/scott-cobellon/new-meeting';
 
 // --- CLOUD CONFIGURATION ---
-export const PRODUCTION_CONFIG_URL = '';
+export const PRODUCTION_CONFIG_URL = '/api/content';
 
 // specific helper to unwrap the module if it has a default export
 const unwrapContent = (data: any): VillaContent => {

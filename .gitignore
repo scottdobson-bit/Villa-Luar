@@ -1,0 +1,22 @@
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+.wrangler/
+
+# Environment
+.env
+.env.local
+
+# R2 migration artefacts (regenerate via prepare-r2-migration.mjs)
+r2-upload/
+upload-r2.sh
+public/villa-content.migrated.json
+villa-content.backup.json
+
+# IDE / OS
+.DS_Store
+.vscode/
+.idea/
+*.log

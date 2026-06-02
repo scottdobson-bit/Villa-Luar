@@ -11,6 +11,12 @@
       "bucket_name": "villa-luar-images"
     }
   ],
+  "kv_namespaces": [
+    {
+      "binding": "VILLA_CONTENT",
+      "id": "09868a9ddd57433eb24cd4c1db97630f"
+    }
+  ],
   "observability": {
     "enabled": true
   }

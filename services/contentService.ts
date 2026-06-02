@@ -73,9 +73,8 @@ export const getContent = async (): Promise<VillaContent> => {
         }
     }
 
-    // 2. If not logged in (Public), OR if no local draft exists, FETCH THE FILE
+    // 2. If not logged in (Public), OR if no local draft exists, FETCH FROM KV / FILE
     try {
-        // Use absolute path to ensure we hit the root of the domain where public/ files are served
         const defaultContentUrl = '/villa-content.json';
         const fetchUrl = PRODUCTION_CONFIG_URL || defaultContentUrl;
         
@@ -163,5 +162,26 @@ export const clearDraftContent = async (): Promise<void> => {
     await dbAction(DRAFT_STORE, 'readwrite', store => store.delete('content'));
   } catch (error) {
     console.error("Failed to clear draft from DB:", error);
+  }
+};
+
+/**
+ * Publish content live by writing to Cloudflare KV via the Worker API.
+ * The apiToken is the raw admin password, which must match the
+ * ADMIN_PASSWORD Worker secret set via: npx wrangler secret put ADMIN_PASSWORD
+ */
+export const publishContent = async (content: VillaContent, apiToken: string): Promise<void> => {
+  const response = await fetch('/api/content', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${apiToken}`,
+    },
+    body: JSON.stringify(content),
+  });
+
+  if (!response.ok) {
+    const err = await response.json().catch(() => ({ error: response.statusText }));
+    throw new Error((err as { error: string }).error || 'Publish failed');
   }
 };

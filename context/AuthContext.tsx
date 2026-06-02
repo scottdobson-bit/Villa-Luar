@@ -3,6 +3,7 @@ import { ADMIN_PASSWORD_HASH } from '../constants';
 
 interface AuthContextType {
   isLoggedIn: boolean;
+  apiToken: string | null;
   login: (password: string) => Promise<boolean>;
   logout: () => void;
 }
@@ -19,12 +20,15 @@ const hashPassword = async (password: string): Promise<string> => {
 
 export const AuthProvider = ({ children }: React.PropsWithChildren) => {
   const [isLoggedIn, setIsLoggedIn] = useState(sessionStorage.getItem('isLoggedIn') === 'true');
+  const [apiToken, setApiToken] = useState<string | null>(sessionStorage.getItem('apiToken'));
 
   const login = useCallback(async (password: string): Promise<boolean> => {
     const hash = await hashPassword(password);
     if (hash === ADMIN_PASSWORD_HASH) {
       setIsLoggedIn(true);
+      setApiToken(password);
       sessionStorage.setItem('isLoggedIn', 'true');
+      sessionStorage.setItem('apiToken', password);
       return true;
     }
     return false;
@@ -32,11 +36,13 @@ export const AuthProvider = ({ children }: React.PropsWithChildren) => {
 
   const logout = useCallback(() => {
     setIsLoggedIn(false);
+    setApiToken(null);
     sessionStorage.removeItem('isLoggedIn');
+    sessionStorage.removeItem('apiToken');
   }, []);
 
   return (
-    <AuthContext.Provider value={{ isLoggedIn, login, logout }}>
+    <AuthContext.Provider value={{ isLoggedIn, apiToken, login, logout }}>
       {children}
     </AuthContext.Provider>
   );
@@ -44,8 +50,6 @@ export const AuthProvider = ({ children }: React.PropsWithChildren) => {
 
 export const useAuth = (): AuthContextType => {
   const context = useContext(AuthContext);
-  if (context === undefined) {
-    throw new Error('useAuth must be used within an AuthProvider');
-  }
+  if (!context) throw new Error('useAuth must be used within an AuthProvider');
   return context;
 };

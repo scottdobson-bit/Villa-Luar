@@ -9,6 +9,7 @@ import MainImageManager from './MainImageManager';
 import LocationManager from './LocationManager';
 import ThemeToggle from './ThemeToggle';
 import { VillaContent } from '../types';
+import { publishContent } from '../services/contentService';
 
 type Tab = 'mainImages' | 'location' | 'photos' | 'text' | 'faqs';
 
@@ -22,10 +23,11 @@ const SaveSuccessToast = ({ show, message }: { show: boolean, message?: string }
 
 
 const AdminPanel = () => {
-    const { logout } = useAuth();
+    const { logout, apiToken } = useAuth();
     const { updateDraftContent, saveChanges, isDirty, draftContent } = useContent();
     const [activeTab, setActiveTab] = useState<Tab>('mainImages');
     const [toast, setToast] = useState({ show: false, message: '' });
+    const [isPublishing, setIsPublishing] = useState(false);
 
     useEffect(() => {
         if (toast.show) {
@@ -144,6 +146,21 @@ const AdminPanel = () => {
         saveChanges(() => setToast({ show: true, message: 'Draft saved locally!' }));
     };
 
+    const handlePublish = async () => {
+        if (!draftContent) return alert('No content to publish.');
+        if (!apiToken) return alert('Not authenticated. Please log in again.');
+        setIsPublishing(true);
+        try {
+            await publishContent(draftContent, apiToken);
+            setToast({ show: true, message: '🚀 Published live successfully!' });
+        } catch (err: unknown) {
+            const message = err instanceof Error ? err.message : 'Unknown error';
+            alert(`Publish failed: ${message}`);
+        } finally {
+            setIsPublishing(false);
+        }
+    };
+
     const renderTabContent = () => {
         switch (activeTab) {
             case 'mainImages':
@@ -214,28 +231,35 @@ const AdminPanel = () => {
                     </div>
                 </div>
                 
-                {/* Deployment Workflow Box */}
+                {/* Publish bar */}
                 <div className="bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-lg p-4 shadow-sm">
                     <div className="flex flex-col md:flex-row items-center justify-between gap-4">
-                        <div className="text-sm text-amber-900 dark:text-amber-100">
-                            <p className="font-bold text-lg mb-1 flex items-center gap-2">
-                                <span className="text-xl">🚀</span> How to Publish Changes Live
-                            </p>
-                            <ol className="list-decimal list-inside mt-2 space-y-1 ml-1">
-                                <li>Make your edits here and click <strong>Save Draft</strong>.</li>
-                                <li><strong>Option A (Manual):</strong> Click <strong>Download JSON</strong> (this file contains all images & text) and replace <code className="bg-white dark:bg-stone-800 px-1 rounded">public/villa-content.json</code> in the codebase.</li>
-                                <li><strong>Option B (AI Assist):</strong> Click <strong>Copy Data for AI</strong> and tell the AI: <em>"Update the app with this data."</em></li>
-                            </ol>
+                        <p className="text-sm text-amber-900 dark:text-amber-100">
+                            Save your draft, then click <strong>Publish Live</strong> to push changes to the site instantly — no file downloads or deployments needed.
+                        </p>
+                        <div className="flex gap-3 flex-shrink-0">
+                            <button
+                                onClick={handleCopyForAI}
+                                className="px-4 py-2 text-sm font-medium text-amber-700 bg-white border border-amber-700 rounded-md hover:bg-amber-50 dark:bg-stone-800 dark:text-amber-500 dark:border-amber-700 dark:hover:bg-stone-700"
+                            >
+                                Copy for AI
+                            </button>
+                            <button
+                                onClick={handlePublish}
+                                disabled={isPublishing}
+                                className="px-6 py-2 text-sm font-bold text-white bg-amber-700 rounded-lg shadow-lg hover:bg-amber-800 disabled:opacity-60 disabled:cursor-not-allowed transition-all flex items-center gap-2"
+                            >
+                                {isPublishing ? (
+                                    <>
+                                        <svg className="animate-spin h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                                            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z" />
+                                        </svg>
+                                        Publishing…
+                                    </>
+                                ) : '🚀 Publish Live'}
+                            </button>
                         </div>
-                         <button 
-                            onClick={handleCopyForAI} 
-                            className="flex-shrink-0 px-6 py-4 bg-amber-700 text-white font-bold rounded-lg shadow-lg hover:bg-amber-800 transform hover:scale-105 transition-all flex items-center gap-2"
-                        >
-                            <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
-                            </svg>
-                            Copy Data for AI
-                        </button>
                     </div>
                 </div>
             </header>
