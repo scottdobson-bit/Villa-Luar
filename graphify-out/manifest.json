@@ -1,0 +1,337 @@
+{
+  "/home/user/Villa-Luar/.claude/hooks/session-start.sh": {
+    "mtime": 1780466766.680883,
+    "ast_hash": "6c76ae2a5d48ab2b8d03653fced6802e",
+    "semantic_hash": "6c76ae2a5d48ab2b8d03653fced6802e"
+  },
+  "/home/user/Villa-Luar/.claude/settings.json": {
+    "mtime": 1780466778.700883,
+    "ast_hash": "a7cd57ea115a8503c75fc99691fadfcf",
+    "semantic_hash": "a7cd57ea115a8503c75fc99691fadfcf"
+  },
+  "/home/user/Villa-Luar/.claude/settings.local.json": {
+    "mtime": 1780466753.840883,
+    "ast_hash": "b5ae1f196fb37c2c3d5471d39de68b80",
+    "semantic_hash": "b5ae1f196fb37c2c3d5471d39de68b80"
+  },
+  "/home/user/Villa-Luar/App.tsx": {
+    "mtime": 1779258784.7976422,
+    "ast_hash": "a6b7283379441b1bf11d5a21e629bfba",
+    "semantic_hash": "a6b7283379441b1bf11d5a21e629bfba"
+  },
+  "/home/user/Villa-Luar/build-helper.js": {
+    "mtime": 1779258784.7976422,
+    "ast_hash": "8c706a2c39482280c7adfbf5fed4de3c",
+    "semantic_hash": "8c706a2c39482280c7adfbf5fed4de3c"
+  },
+  "/home/user/Villa-Luar/components/AdminPanel.tsx": {
+    "mtime": 1780466371.4368854,
+    "ast_hash": "e6991fe36978db284f5136293e9948e3",
+    "semantic_hash": "e6991fe36978db284f5136293e9948e3"
+  },
+  "/home/user/Villa-Luar/components/Chatbot.tsx": {
+    "mtime": 1779258784.7999177,
+    "ast_hash": "eac0e67fa4077d374fde864b581bd873",
+    "semantic_hash": "eac0e67fa4077d374fde864b581bd873"
+  },
+  "/home/user/Villa-Luar/components/FaqManager.tsx": {
+    "mtime": 1779258784.7999177,
+    "ast_hash": "a61c5803aaf5ff4bf9ab2be8cb4583da",
+    "semantic_hash": "a61c5803aaf5ff4bf9ab2be8cb4583da"
+  },
+  "/home/user/Villa-Luar/components/LocationManager.tsx": {
+    "mtime": 1779258784.7999177,
+    "ast_hash": "329382c4c26f5bbbfb838f229535642d",
+    "semantic_hash": "329382c4c26f5bbbfb838f229535642d"
+  },
+  "/home/user/Villa-Luar/components/LoginForm.tsx": {
+    "mtime": 1779258784.7999177,
+    "ast_hash": "c544dfd16667864db1664cee611fa989",
+    "semantic_hash": "c544dfd16667864db1664cee611fa989"
+  },
+  "/home/user/Villa-Luar/components/MainImageManager.tsx": {
+    "mtime": 1779258784.7999177,
+    "ast_hash": "91a190c870c50c1b65de64811ea9b3d0",
+    "semantic_hash": "91a190c870c50c1b65de64811ea9b3d0"
+  },
+  "/home/user/Villa-Luar/components/PhotoGallery.tsx": {
+    "mtime": 1779258784.7999177,
+    "ast_hash": "29e464580352caa9bdcf1b101a5d3518",
+    "semantic_hash": "29e464580352caa9bdcf1b101a5d3518"
+  },
+  "/home/user/Villa-Luar/components/PhotoManager.tsx": {
+    "mtime": 1779258784.7999177,
+    "ast_hash": "53b86f86f05b73cd9cd2cc8b58f19b88",
+    "semantic_hash": "53b86f86f05b73cd9cd2cc8b58f19b88"
+  },
+  "/home/user/Villa-Luar/components/PrivateRoute.tsx": {
+    "mtime": 1779258784.7999177,
+    "ast_hash": "aac7bb3d22feae1d9771f03a279ae612",
+    "semantic_hash": "aac7bb3d22feae1d9771f03a279ae612"
+  },
+  "/home/user/Villa-Luar/components/TextManager.tsx": {
+    "mtime": 1780466371.4368854,
+    "ast_hash": "c3c5b3bb8d1e4b62fa7e9913e464e382",
+    "semantic_hash": "c3c5b3bb8d1e4b62fa7e9913e464e382"
+  },
+  "/home/user/Villa-Luar/components/ThemeToggle.tsx": {
+    "mtime": 1779258784.7999177,
+    "ast_hash": "d22b8daae4a1c75b39b7aef6472fb31d",
+    "semantic_hash": "d22b8daae4a1c75b39b7aef6472fb31d"
+  },
+  "/home/user/Villa-Luar/components/ViewingManager.tsx": {
+    "mtime": 1779258784.7999177,
+    "ast_hash": "d41d8cd98f00b204e9800998ecf8427e",
+    "semantic_hash": "d41d8cd98f00b204e9800998ecf8427e"
+  },
+  "/home/user/Villa-Luar/constants.ts": {
+    "mtime": 1780466371.4368854,
+    "ast_hash": "8c4d5b2f0a927b98e0740d798155fc18",
+    "semantic_hash": "8c4d5b2f0a927b98e0740d798155fc18"
+  },
+  "/home/user/Villa-Luar/context/AuthContext.tsx": {
+    "mtime": 1780466371.4368854,
+    "ast_hash": "e7b006283c6113a52daade50df075398",
+    "semantic_hash": "e7b006283c6113a52daade50df075398"
+  },
+  "/home/user/Villa-Luar/context/ContentContext.tsx": {
+    "mtime": 1779258784.8037562,
+    "ast_hash": "7946bd85187caeb722084bf70dc4a9c4",
+    "semantic_hash": "7946bd85187caeb722084bf70dc4a9c4"
+  },
+  "/home/user/Villa-Luar/context/ThemeContext.tsx": {
+    "mtime": 1779258784.8037562,
+    "ast_hash": "600e16e47ec36bcfd667a6444ea6e0c7",
+    "semantic_hash": "600e16e47ec36bcfd667a6444ea6e0c7"
+  },
+  "/home/user/Villa-Luar/imageOptimizer.ts": {
+    "mtime": 1779258784.8037562,
+    "ast_hash": "8ab6fa05ef06b367ca480eb594dfffd3",
+    "semantic_hash": "8ab6fa05ef06b367ca480eb594dfffd3"
+  },
+  "/home/user/Villa-Luar/index.tsx": {
+    "mtime": 1779258784.8037562,
+    "ast_hash": "0a92b020fa991c0fdb0a4d3cc451b225",
+    "semantic_hash": "0a92b020fa991c0fdb0a4d3cc451b225"
+  },
+  "/home/user/Villa-Luar/metadata.json": {
+    "mtime": 1779258784.8037562,
+    "ast_hash": "ba44f68824dfb054314498de7468cfd9",
+    "semantic_hash": "ba44f68824dfb054314498de7468cfd9"
+  },
+  "/home/user/Villa-Luar/migrate-images-to-r2.mjs": {
+    "mtime": 1779258784.8037562,
+    "ast_hash": "9e101db0adaadf2efb553aa8e17b93de",
+    "semantic_hash": "9e101db0adaadf2efb553aa8e17b93de"
+  },
+  "/home/user/Villa-Luar/migrate-to-cms.js": {
+    "mtime": 1780466371.4368854,
+    "ast_hash": "21df1634b8f32f093adcd6302d614c6a",
+    "semantic_hash": "21df1634b8f32f093adcd6302d614c6a"
+  },
+  "/home/user/Villa-Luar/package.json": {
+    "mtime": 1780466371.4408853,
+    "ast_hash": "62e724c2eaa4e3c49983a1ffcc792b30",
+    "semantic_hash": "62e724c2eaa4e3c49983a1ffcc792b30"
+  },
+  "/home/user/Villa-Luar/pages/AdminPage.tsx": {
+    "mtime": 1779258784.8037562,
+    "ast_hash": "c3239977d75014c24c0b57fe6ba1f714",
+    "semantic_hash": "c3239977d75014c24c0b57fe6ba1f714"
+  },
+  "/home/user/Villa-Luar/pages/HomePage.tsx": {
+    "mtime": 1780466371.4408853,
+    "ast_hash": "b385feca8bfbe12b409ec8628d321d0b",
+    "semantic_hash": "b385feca8bfbe12b409ec8628d321d0b"
+  },
+  "/home/user/Villa-Luar/postcss.config.js": {
+    "mtime": 1779258784.8058972,
+    "ast_hash": "470cfd3ee10fbff840b377e769485f3e",
+    "semantic_hash": "470cfd3ee10fbff840b377e769485f3e"
+  },
+  "/home/user/Villa-Luar/prepare-r2-migration.mjs": {
+    "mtime": 1780466371.4408853,
+    "ast_hash": "17f8b60090e53beea3b7f8a8d5ac6aff",
+    "semantic_hash": "17f8b60090e53beea3b7f8a8d5ac6aff"
+  },
+  "/home/user/Villa-Luar/public/villa-content.json": {
+    "mtime": 1779258784.9174504,
+    "ast_hash": "fe2c2003054b5e51885e8c0c1cf9313a",
+    "semantic_hash": "fe2c2003054b5e51885e8c0c1cf9313a"
+  },
+  "/home/user/Villa-Luar/services/contentService.ts": {
+    "mtime": 1780466371.4448853,
+    "ast_hash": "dd8f270df09c4d217772cd3671ed387d",
+    "semantic_hash": "dd8f270df09c4d217772cd3671ed387d"
+  },
+  "/home/user/Villa-Luar/services/geminiService.ts": {
+    "mtime": 1779258784.92626,
+    "ast_hash": "22a220d7a8d9985a956053bfd0c25c8e",
+    "semantic_hash": "22a220d7a8d9985a956053bfd0c25c8e"
+  },
+  "/home/user/Villa-Luar/tailwind.config.js": {
+    "mtime": 1779258784.92626,
+    "ast_hash": "991dc5062be1dd7b982c3d5228853587",
+    "semantic_hash": "991dc5062be1dd7b982c3d5228853587"
+  },
+  "/home/user/Villa-Luar/tsconfig.json": {
+    "mtime": 1779258784.92626,
+    "ast_hash": "e8ea6fd9d3eae82ee995ecf06676f9c8",
+    "semantic_hash": "e8ea6fd9d3eae82ee995ecf06676f9c8"
+  },
+  "/home/user/Villa-Luar/types.ts": {
+    "mtime": 1780466371.4448853,
+    "ast_hash": "ac697eacad8bc323d72b56ceb3a7b881",
+    "semantic_hash": "ac697eacad8bc323d72b56ceb3a7b881"
+  },
+  "/home/user/Villa-Luar/upload-images.mjs": {
+    "mtime": 1780466371.4448853,
+    "ast_hash": "53cbc6bc4987619b7ae1e8ad7b46f734",
+    "semantic_hash": "53cbc6bc4987619b7ae1e8ad7b46f734"
+  },
+  "/home/user/Villa-Luar/utils/fileUtils.ts": {
+    "mtime": 1779258784.92626,
+    "ast_hash": "35ec2bfb98649c7c2299d35fc943756c",
+    "semantic_hash": "35ec2bfb98649c7c2299d35fc943756c"
+  },
+  "/home/user/Villa-Luar/utils/svgProcessor.ts": {
+    "mtime": 1779258784.927767,
+    "ast_hash": "8aea28500260316818fd3f0c61512571",
+    "semantic_hash": "8aea28500260316818fd3f0c61512571"
+  },
+  "/home/user/Villa-Luar/utils/useScrollReveal.ts": {
+    "mtime": 1779258784.927767,
+    "ast_hash": "cb63170ea01607cff1bf986f7f870aa8",
+    "semantic_hash": "cb63170ea01607cff1bf986f7f870aa8"
+  },
+  "/home/user/Villa-Luar/villa-content-clean.json": {
+    "mtime": 1780466371.4448853,
+    "ast_hash": "ca57346f13f409bcfeeb3e337479e0f6",
+    "semantic_hash": "ca57346f13f409bcfeeb3e337479e0f6"
+  },
+  "/home/user/Villa-Luar/villa-content.json": {
+    "mtime": 1779258785.0014503,
+    "ast_hash": "fe2c2003054b5e51885e8c0c1cf9313a",
+    "semantic_hash": "fe2c2003054b5e51885e8c0c1cf9313a"
+  },
+  "/home/user/Villa-Luar/vite.config.ts": {
+    "mtime": 1780466371.4448853,
+    "ast_hash": "b3a474d859abe7b97c2d995614c1c50a",
+    "semantic_hash": "b3a474d859abe7b97c2d995614c1c50a"
+  },
+  "/home/user/Villa-Luar/vite.config.ts.timestamp-1776526814187-312527a1f3995.mjs": {
+    "mtime": 1780466371.4448853,
+    "ast_hash": "5d2c6d6f88bdd674b64b4f8b72b2a37b",
+    "semantic_hash": "5d2c6d6f88bdd674b64b4f8b72b2a37b"
+  },
+  "/home/user/Villa-Luar/vite.config.ts.timestamp-1776527981317-8cd84dd3779e9.mjs": {
+    "mtime": 1780466371.4448853,
+    "ast_hash": "5d2c6d6f88bdd674b64b4f8b72b2a37b",
+    "semantic_hash": "5d2c6d6f88bdd674b64b4f8b72b2a37b"
+  },
+  "/home/user/Villa-Luar/vite.config.ts.timestamp-1776527988913-6a0a22dc4cb8c.mjs": {
+    "mtime": 1780466371.4448853,
+    "ast_hash": "5d2c6d6f88bdd674b64b4f8b72b2a37b",
+    "semantic_hash": "5d2c6d6f88bdd674b64b4f8b72b2a37b"
+  },
+  "/home/user/Villa-Luar/worker.ts": {
+    "mtime": 1780466371.4448853,
+    "ast_hash": "0411b88b4d4693f8964d8e6a0b5291b4",
+    "semantic_hash": "0411b88b4d4693f8964d8e6a0b5291b4"
+  },
+  "/home/user/Villa-Luar/wrangler.json": {
+    "mtime": 1780466371.4448853,
+    "ast_hash": "77f23d4be0a0f7d0296eb9e7c4dbde53",
+    "semantic_hash": "77f23d4be0a0f7d0296eb9e7c4dbde53"
+  },
+  "/home/user/Villa-Luar/.claude/CLAUDE.md": {
+    "mtime": 1780466432.1182444,
+    "ast_hash": "db73b0edd7ffbc61ceac177130730865",
+    "semantic_hash": "db73b0edd7ffbc61ceac177130730865"
+  },
+  "/home/user/Villa-Luar/.claude/skills/graphify/SKILL.md": {
+    "mtime": 1780466432.1177788,
+    "ast_hash": "1acfc5e3ff91c92373909c5c11f55769",
+    "semantic_hash": "1acfc5e3ff91c92373909c5c11f55769"
+  },
+  "/home/user/Villa-Luar/.claude/skills/graphify/references/add-watch.md": {
+    "mtime": 1780466425.628885,
+    "ast_hash": "0df0589623217ca38a12bdcabfb42f4c",
+    "semantic_hash": "0df0589623217ca38a12bdcabfb42f4c"
+  },
+  "/home/user/Villa-Luar/.claude/skills/graphify/references/exports.md": {
+    "mtime": 1780466425.632885,
+    "ast_hash": "7fb1a81aca17a462db70684a324fcfb0",
+    "semantic_hash": "7fb1a81aca17a462db70684a324fcfb0"
+  },
+  "/home/user/Villa-Luar/.claude/skills/graphify/references/extraction-spec.md": {
+    "mtime": 1780466425.632885,
+    "ast_hash": "24808b03abfeaf5f6435bb69c0125b2c",
+    "semantic_hash": "24808b03abfeaf5f6435bb69c0125b2c"
+  },
+  "/home/user/Villa-Luar/.claude/skills/graphify/references/github-and-merge.md": {
+    "mtime": 1780466425.632885,
+    "ast_hash": "cde13df085e4c492aeb7ba298a996d0d",
+    "semantic_hash": "cde13df085e4c492aeb7ba298a996d0d"
+  },
+  "/home/user/Villa-Luar/.claude/skills/graphify/references/hooks.md": {
+    "mtime": 1780466425.632885,
+    "ast_hash": "3f545db6ce646650bb9de588f5512a27",
+    "semantic_hash": "3f545db6ce646650bb9de588f5512a27"
+  },
+  "/home/user/Villa-Luar/.claude/skills/graphify/references/query.md": {
+    "mtime": 1780466425.636885,
+    "ast_hash": "8b40ed8c9e9060fc215219a8fc964091",
+    "semantic_hash": "8b40ed8c9e9060fc215219a8fc964091"
+  },
+  "/home/user/Villa-Luar/.claude/skills/graphify/references/transcribe.md": {
+    "mtime": 1780466425.636885,
+    "ast_hash": "70f6aa30d6211f3a2c7e9fc45479f50c",
+    "semantic_hash": "70f6aa30d6211f3a2c7e9fc45479f50c"
+  },
+  "/home/user/Villa-Luar/.claude/skills/graphify/references/update.md": {
+    "mtime": 1780466425.640885,
+    "ast_hash": "735932eaa4f0c8fef9566c538ae3e5f8",
+    "semantic_hash": "735932eaa4f0c8fef9566c538ae3e5f8"
+  },
+  "/home/user/Villa-Luar/.github/workflows/deploy.yml": {
+    "mtime": 1779258784.7976422,
+    "ast_hash": "87d6be978c854738da8c301957518cbb",
+    "semantic_hash": "87d6be978c854738da8c301957518cbb"
+  },
+  "/home/user/Villa-Luar/CLAUDE.md": {
+    "mtime": 1780466432.1184173,
+    "ast_hash": "82efb97a359f5c7290bf2513d14686be",
+    "semantic_hash": "82efb97a359f5c7290bf2513d14686be"
+  },
+  "/home/user/Villa-Luar/README.md": {
+    "mtime": 1779258784.7976422,
+    "ast_hash": "d60f0609b8457daf7646419b97f2944e",
+    "semantic_hash": "d60f0609b8457daf7646419b97f2944e"
+  },
+  "/home/user/Villa-Luar/index.html": {
+    "mtime": 1779258784.8037562,
+    "ast_hash": "4459924b40387dc1b986694eb9c23667",
+    "semantic_hash": "4459924b40387dc1b986694eb9c23667"
+  },
+  "/home/user/Villa-Luar/villa-playa-blanca-campaign-plan.md": {
+    "mtime": 1779258785.0054505,
+    "ast_hash": "9eddb68fc8e2bf93b598373eb669a544",
+    "semantic_hash": "9eddb68fc8e2bf93b598373eb669a544"
+  },
+  "/home/user/Villa-Luar/Villa-Luar-Investment-Pack.pdf": {
+    "mtime": 1779258784.7976422,
+    "ast_hash": "52b9159bafa5bce254e70f969fa3dc71",
+    "semantic_hash": "52b9159bafa5bce254e70f969fa3dc71"
+  },
+  "/home/user/Villa-Luar/public/favicon.svg": {
+    "mtime": 1779258784.8074894,
+    "ast_hash": "41cd070e874a5c021e2eed1dc5ab4cbb",
+    "semantic_hash": "41cd070e874a5c021e2eed1dc5ab4cbb"
+  },
+  "/home/user/Villa-Luar/public/og-image.jpg": {
+    "mtime": 1780466371.4448853,
+    "ast_hash": "645604dd5332fd875ca8a3740d174a1f",
+    "semantic_hash": "645604dd5332fd875ca8a3740d174a1f"
+  }
+}
