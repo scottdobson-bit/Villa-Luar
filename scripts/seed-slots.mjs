@@ -14,6 +14,7 @@ if (!PASSWORD) {
 const headers = {
   'Content-Type': 'application/json',
   'Authorization': `Bearer ${PASSWORD}`,
+  'User-Agent': 'villa-luar-seeder/1.0',
 };
 
 function nextNSundays(n) {
@@ -50,8 +51,10 @@ for (const sunday of sundays) {
       console.log(`✅  Added: ${label} on ${sunday.toDateString()}`);
       added++;
     } else {
-      const err = await res.json();
-      console.error(`❌  Failed: ${label} on ${sunday.toDateString()} —`, err);
+      const text = await res.text();
+      let err;
+      try { err = JSON.parse(text); } catch { err = text.slice(0, 120); }
+      console.error(`❌  Failed [${res.status}]: ${label} on ${sunday.toDateString()} —`, err);
     }
   }
 }

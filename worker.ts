@@ -2,17 +2,17 @@
  * Villa Luar — Cloudflare Worker
  *
  * Routes:
- *   GET  /images/*          — serves photos from R2
- *   GET  /api/content       — returns villa content JSON from KV
- *   POST /api/content       — updates villa content JSON in KV (admin auth required)
- *   POST /api/upload        — uploads an image to R2 (admin auth required)
- *   GET  /api/slots         — returns available (non-booked) viewing slots
- *   POST /api/slots         — adds a slot (admin auth required)
- *   DELETE /api/slots/:id   — removes a slot (admin auth required)
- *   POST /api/book          — books a slot
- *   GET  /api/bookings      — lists all bookings (admin auth required)
+ *   GET  /images/*           — serves photos from R2
+ *   GET  /api/content        — returns villa content JSON from KV
+ *   POST /api/content        — updates villa content JSON in KV (admin auth required)
+ *   POST /api/upload         — uploads an image to R2 (admin auth required)
+ *   GET  /api/slots          — returns available (non-booked) viewing slots
+ *   POST /api/slots          — adds a slot (admin auth required)
+ *   DELETE /api/slots/:id    — removes a slot (admin auth required)
+ *   POST /api/book           — books a slot, sends confirmation emails
+ *   GET  /api/bookings       — lists all bookings (admin auth required)
  *   DELETE /api/bookings/:id — cancels booking & restores slot (admin auth required)
- *   *                       — falls through to static site assets
+ *   *                        — falls through to static site assets
  */
 
 interface Env {
@@ -20,11 +20,16 @@ interface Env {
   VILLA_LUAR_IMAGES: R2Bucket;
   VILLA_CONTENT: KVNamespace;
   ADMIN_PASSWORD: string;
+  GMAIL_CLIENT_ID: string;
+  GMAIL_CLIENT_SECRET: string;
+  GMAIL_REFRESH_TOKEN: string;
+  NOTIFY_EMAIL: string; // e.g. scott@cobellon.co.uk
+  FROM_EMAIL: string;   // e.g. scott@villaluar.com
 }
 
 interface BookingSlot {
   id: string;
-  datetime: string; // ISO 8601
+  datetime: string; // ISO 8601 UTC
   label: string;
   booked: boolean;
 }
@@ -68,6 +73,70 @@ async function getSlots(env: Env): Promise<BookingSlot[]> {
 async function getBookings(env: Env): Promise<Booking[]> {
   const raw = await env.VILLA_CONTENT.get('bookings');
   return raw ? JSON.parse(raw) : [];
+}
+
+// ── Gmail API email sending ──────────────────────────────────────────────────
+async function getGmailAccessToken(env: Env): Promise<string> {
+  const res = await fetch('https://oauth2.googleapis.com/token', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    body: new URLSearchParams({
+      client_id: env.GMAIL_CLIENT_ID,
+      client_secret: env.GMAIL_CLIENT_SECRET,
+      refresh_token: env.GMAIL_REFRESH_TOKEN,
+      grant_type: 'refresh_token',
+    }),
+  });
+  const data = await res.json() as { access_token: string };
+  return data.access_token;
+}
+
+function makeEmail(to: string, subject: string, body: string, from: string): string {
+  const message = [
+    `From: Villa Luar <${from}>`,
+    `To: ${to}`,
+    `Subject: ${subject}`,
+    'MIME-Version: 1.0',
+    'Content-Type: text/plain; charset=UTF-8',
+    '',
+    body,
+  ].join('\r\n');
+  // Base64url encode
+  return btoa(unescape(encodeURIComponent(message)))
+    .replace(/\+/g, '-')
+    .replace(/\//g, '_')
+    .replace(/=+$/, '');
+}
+
+async function sendEmail(to: string, subject: string, body: string, env: Env): Promise<void> {
+  try {
+    const token = await getGmailAccessToken(env);
+    const raw = makeEmail(to, subject, body, env.FROM_EMAIL);
+    const res = await fetch('https://gmail.googleapis.com/gmail/v1/users/me/messages/send', {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ raw }),
+    });
+    if (!res.ok) {
+      const err = await res.text();
+      console.error('Gmail send failed:', res.status, err);
+    }
+  } catch (e) {
+    console.error('Email error:', e);
+  }
+}
+
+function formatSlotDate(isoDatetime: string): string {
+  return new Date(isoDatetime).toLocaleDateString('en-GB', {
+    weekday: 'long',
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric',
+    timeZone: 'Atlantic/Canary',
+  });
 }
 
 export default {
@@ -116,11 +185,8 @@ export default {
       if (!isAuthorized(request, env)) return jsonResponse({ error: 'Unauthorized' }, 401);
 
       let body: unknown;
-      try {
-        body = await request.json();
-      } catch {
-        return jsonResponse({ error: 'Invalid JSON' }, 400);
-      }
+      try { body = await request.json(); }
+      catch { return jsonResponse({ error: 'Invalid JSON' }, 400); }
 
       await env.VILLA_CONTENT.put('villa-content', JSON.stringify(body));
       return jsonResponse({ ok: true });
@@ -149,8 +215,7 @@ export default {
     // ── GET /api/slots ───────────────────────────────────────────────────────
     if (pathname === '/api/slots' && method === 'GET') {
       const slots = await getSlots(env);
-      const available = slots.filter(s => !s.booked);
-      return jsonResponse(available);
+      return jsonResponse(slots.filter(s => !s.booked));
     }
 
     // ── POST /api/slots (admin) ──────────────────────────────────────────────
@@ -158,11 +223,8 @@ export default {
       if (!isAuthorized(request, env)) return jsonResponse({ error: 'Unauthorized' }, 401);
 
       let body: { datetime: string; label: string };
-      try {
-        body = await request.json() as { datetime: string; label: string };
-      } catch {
-        return jsonResponse({ error: 'Invalid JSON' }, 400);
-      }
+      try { body = await request.json() as { datetime: string; label: string }; }
+      catch { return jsonResponse({ error: 'Invalid JSON' }, 400); }
 
       if (!body.datetime || !body.label) {
         return jsonResponse({ error: 'datetime and label are required' }, 400);
@@ -198,24 +260,24 @@ export default {
     // ── POST /api/book ───────────────────────────────────────────────────────
     if (pathname === '/api/book' && method === 'POST') {
       let body: { slotId: string; name: string; email: string; phone: string; message?: string };
-      try {
-        body = await request.json() as typeof body;
-      } catch {
-        return jsonResponse({ error: 'Invalid JSON' }, 400);
-      }
+      try { body = await request.json() as typeof body; }
+      catch { return jsonResponse({ error: 'Invalid JSON' }, 400); }
 
       if (!body.slotId || !body.name || !body.email || !body.phone) {
         return jsonResponse({ error: 'slotId, name, email, phone are required' }, 400);
       }
 
+      // Re-read slots fresh to minimise race window
       const slots = await getSlots(env);
       const slotIndex = slots.findIndex(s => s.id === body.slotId);
       if (slotIndex === -1) return jsonResponse({ error: 'Slot not found' }, 404);
       if (slots[slotIndex].booked) return jsonResponse({ error: 'Slot already booked' }, 409);
 
+      // Mark booked and persist immediately
       slots[slotIndex].booked = true;
       await env.VILLA_CONTENT.put('booking-slots', JSON.stringify(slots));
 
+      // Create booking record
       const bookings = await getBookings(env);
       const newBooking: Booking = {
         id: crypto.randomUUID(),
@@ -231,17 +293,63 @@ export default {
       bookings.push(newBooking);
       await env.VILLA_CONTENT.put('bookings', JSON.stringify(bookings));
 
+      const dateStr = formatSlotDate(newBooking.slotDatetime);
+      const timeStr = newBooking.slotLabel;
+
+      // Send admin notification (fire and forget — don't block response)
+      const adminBody = [
+        `New viewing request for Villa Luar`,
+        ``,
+        `Name:    ${newBooking.name}`,
+        `Email:   ${newBooking.email}`,
+        `Phone:   ${newBooking.phone}`,
+        `Date:    ${dateStr}`,
+        `Time:    ${timeStr}`,
+        newBooking.message ? `Message: ${newBooking.message}` : '',
+        ``,
+        `Booking ID: ${newBooking.id}`,
+        `Booked at:  ${new Date(newBooking.createdAt).toLocaleString('en-GB', { timeZone: 'Atlantic/Canary' })}`,
+      ].filter(l => l !== undefined).join('\n');
+
+      const notifyEmail = env.NOTIFY_EMAIL || 'scott@cobellon.co.uk';
+
+      // Send user confirmation
+      const userBody = [
+        `Dear ${newBooking.name},`,
+        ``,
+        `Thank you for requesting a private viewing of Villa Luar.`,
+        ``,
+        `Your viewing is confirmed for:`,
+        `  Date: ${dateStr}`,
+        `  Time: ${timeStr}`,
+        ``,
+        `We will be in touch to confirm final details. If you need to make any changes,`,
+        `please reply to this email or call us directly.`,
+        ``,
+        `We look forward to welcoming you to Villa Luar.`,
+        ``,
+        `Best regards,`,
+        `Villa Luar`,
+        `villaluar.com`,
+      ].join('\n');
+
+      // Non-blocking email sends
+      const ctx = { waitUntil: (p: Promise<unknown>) => p } as unknown as ExecutionContext;
+      ctx.waitUntil(Promise.all([
+        sendEmail(notifyEmail, `Villa Luar Viewing: ${newBooking.name} — ${dateStr} ${timeStr}`, adminBody, env),
+        sendEmail(newBooking.email, `Your Villa Luar Viewing is Confirmed — ${dateStr}`, userBody, env),
+      ]));
+
       return jsonResponse(newBooking, 201);
     }
 
     // ── GET /api/bookings (admin) ────────────────────────────────────────────
     if (pathname === '/api/bookings' && method === 'GET') {
       if (!isAuthorized(request, env)) return jsonResponse({ error: 'Unauthorized' }, 401);
-      const bookings = await getBookings(env);
-      return jsonResponse(bookings);
+      return jsonResponse(await getBookings(env));
     }
 
-    // ── DELETE /api/bookings/:id (admin) ────────────────────────────────────
+    // ── DELETE /api/bookings/:id (admin) ─────────────────────────────────────
     if (pathname.startsWith('/api/bookings/') && method === 'DELETE') {
       if (!isAuthorized(request, env)) return jsonResponse({ error: 'Unauthorized' }, 401);
 
