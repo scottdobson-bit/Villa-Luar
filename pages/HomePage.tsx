@@ -4,7 +4,7 @@ import { useContent } from '../context/ContentContext';
 import PhotoGallery, { PhotoGalleryHandle } from '../components/PhotoGallery';
 import ThemeToggle from '../components/ThemeToggle';
 
-import { CALENDLY_URL } from '../constants';
+// Calendly import removed — using custom booking
 import { useScrollRevealChildren } from '../utils/useScrollReveal';
 import type { StatIconKey, VillaStat } from '../types';
 
@@ -159,58 +159,184 @@ const FloatingContact = () => (
   </a>
 );
 
-// ─── Calendly ─────────────────────────────────────────────────────────────────
-const CalendlyBookingSection = () => {
-  const widgetRef = React.useRef<HTMLDivElement>(null);
+// ─── Custom Booking ───────────────────────────────────────────────────────────
+interface BookingSlot {
+  id: string;
+  datetime: string;
+  label: string;
+  booked: boolean;
+}
 
-  React.useEffect(() => {
-    const el = widgetRef.current;
-    if (!el) return;
-    let cancelled = false;
-    let pollTimer: number | undefined;
+type BookingStep = 'slots' | 'form' | 'success';
 
-    const init = () => {
-      const Cal = (window as any).Calendly;
-      if (Cal && typeof Cal.initInlineWidget === 'function') {
-        Cal.initInlineWidget({ url: CALENDLY_URL, parentElement: el });
-        return true;
-      }
-      return false;
-    };
+const BookingSection = () => {
+  const [slots, setSlots] = useState<BookingSlot[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [step, setStep] = useState<BookingStep>('slots');
+  const [selectedSlot, setSelectedSlot] = useState<BookingSlot | null>(null);
+  const [form, setForm] = useState({ name: '', email: '', phone: '', message: '' });
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState('');
 
-    // Try immediately; otherwise poll every 250ms for up to ~10s.
-    if (!init()) {
-      const start = Date.now();
-      const tick = () => {
-        if (cancelled) return;
-        if (init()) return;
-        if (Date.now() - start > 10000) return; // give up after 10s
-        pollTimer = window.setTimeout(tick, 250);
-      };
-      pollTimer = window.setTimeout(tick, 250);
-    }
-
-    return () => {
-      cancelled = true;
-      if (pollTimer) window.clearTimeout(pollTimer);
-    };
+  useEffect(() => {
+    fetch('/api/slots')
+      .then(r => r.json())
+      .then((data: BookingSlot[]) => { setSlots(data); setLoading(false); })
+      .catch(() => setLoading(false));
   }, []);
+
+  // Group slots by date
+  const grouped = slots.reduce<Record<string, BookingSlot[]>>((acc, slot) => {
+    const date = new Date(slot.datetime).toLocaleDateString('en-GB', {
+      weekday: 'long', year: 'numeric', month: 'long', day: 'numeric',
+    });
+    if (!acc[date]) acc[date] = [];
+    acc[date].push(slot);
+    return acc;
+  }, {});
+
+  const handleBook = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!selectedSlot) return;
+    setSubmitting(true);
+    setError('');
+    try {
+      const res = await fetch('/api/book', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ slotId: selectedSlot.id, ...form }),
+      });
+      if (!res.ok) {
+        const d = await res.json() as { error?: string };
+        throw new Error(d.error ?? 'Booking failed');
+      }
+      setStep('success');
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Booking failed');
+    } finally {
+      setSubmitting(false);
+    }
+  };
 
   return (
     <section id="booking" className="py-20 bg-white dark:bg-stone-800">
-      <div className="container mx-auto px-6 text-center max-w-4xl">
+      <div className="container mx-auto px-6 text-center max-w-3xl">
         <p className="text-amber-700 dark:text-amber-500 text-sm font-medium tracking-widest uppercase mb-3">
           Schedule Your Visit
         </p>
         <SectionHeading>Arrange a Private Viewing</SectionHeading>
         <p className="mt-4 text-stone-600 dark:text-stone-300 max-w-xl mx-auto text-lg">
-          Select an available time slot from our live calendar to schedule your personal tour of Villa Luar.
+          Viewings are available on Sundays, 12:00–16:00. Select a slot to book your personal tour.
         </p>
-        <div
-          ref={widgetRef}
-          className="mt-10 border dark:border-stone-700 rounded-2xl shadow-xl overflow-hidden bg-white min-h-[900px] md:min-h-[1100px]"
-          style={{ minWidth: '320px' }}
-        />
+
+        <div className="mt-10 text-left">
+          {step === 'slots' && (
+            <>
+              {loading && (
+                <p className="text-center text-stone-500 py-10">Loading available times…</p>
+              )}
+              {!loading && Object.keys(grouped).length === 0 && (
+                <div className="text-center py-10 text-stone-500 dark:text-stone-400">
+                  <p className="text-lg font-medium mb-2">No slots available right now.</p>
+                  <p className="text-sm">Please check back soon or contact us directly.</p>
+                </div>
+              )}
+              {!loading && Object.entries(grouped).map(([date, daySlots]) => (
+                <div key={date} className="mb-8">
+                  <h3 className="text-stone-700 dark:text-stone-300 font-semibold text-base mb-3 border-b border-stone-200 dark:border-stone-700 pb-2">
+                    {date}
+                  </h3>
+                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                    {daySlots.map(slot => (
+                      <button
+                        key={slot.id}
+                        onClick={() => { setSelectedSlot(slot); setStep('form'); }}
+                        className="px-4 py-3 rounded-xl border-2 border-amber-300 bg-amber-50 hover:bg-amber-100 dark:bg-amber-900/20 dark:border-amber-700 dark:hover:bg-amber-900/40 text-amber-800 dark:text-amber-300 font-medium text-sm transition-colors"
+                      >
+                        {slot.label}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </>
+          )}
+
+          {step === 'form' && selectedSlot && (
+            <div className="max-w-md mx-auto">
+              <button
+                onClick={() => setStep('slots')}
+                className="text-sm text-amber-700 dark:text-amber-400 mb-4 flex items-center gap-1 hover:underline"
+              >
+                ← Back to slots
+              </button>
+              <div className="bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-xl p-4 mb-6">
+                <p className="text-amber-900 dark:text-amber-200 font-semibold">{selectedSlot.label}</p>
+                <p className="text-amber-700 dark:text-amber-400 text-sm">
+                  {new Date(selectedSlot.datetime).toLocaleDateString('en-GB', {
+                    weekday: 'long', year: 'numeric', month: 'long', day: 'numeric',
+                  })}
+                </p>
+              </div>
+              <form onSubmit={handleBook} className="space-y-4">
+                <input
+                  required
+                  type="text"
+                  placeholder="Full Name"
+                  value={form.name}
+                  onChange={e => setForm(f => ({ ...f, name: e.target.value }))}
+                  className="w-full px-4 py-3 rounded-lg border border-stone-300 dark:border-stone-600 bg-white dark:bg-stone-700 text-stone-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-amber-500"
+                />
+                <input
+                  required
+                  type="email"
+                  placeholder="Email Address"
+                  value={form.email}
+                  onChange={e => setForm(f => ({ ...f, email: e.target.value }))}
+                  className="w-full px-4 py-3 rounded-lg border border-stone-300 dark:border-stone-600 bg-white dark:bg-stone-700 text-stone-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-amber-500"
+                />
+                <input
+                  required
+                  type="tel"
+                  placeholder="Phone Number"
+                  value={form.phone}
+                  onChange={e => setForm(f => ({ ...f, phone: e.target.value }))}
+                  className="w-full px-4 py-3 rounded-lg border border-stone-300 dark:border-stone-600 bg-white dark:bg-stone-700 text-stone-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-amber-500"
+                />
+                <textarea
+                  rows={3}
+                  placeholder="Any questions or special requests? (optional)"
+                  value={form.message}
+                  onChange={e => setForm(f => ({ ...f, message: e.target.value }))}
+                  className="w-full px-4 py-3 rounded-lg border border-stone-300 dark:border-stone-600 bg-white dark:bg-stone-700 text-stone-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-amber-500 resize-none"
+                />
+                {error && (
+                  <p className="text-red-600 dark:text-red-400 text-sm">{error}</p>
+                )}
+                <button
+                  type="submit"
+                  disabled={submitting}
+                  className="w-full py-3 bg-amber-700 hover:bg-amber-800 disabled:opacity-60 text-white font-semibold rounded-lg transition-colors"
+                >
+                  {submitting ? 'Confirming…' : 'Confirm Viewing'}
+                </button>
+              </form>
+            </div>
+          )}
+
+          {step === 'success' && selectedSlot && (
+            <div className="max-w-md mx-auto text-center py-8">
+              <div className="text-5xl mb-4">🎉</div>
+              <h3 className="text-2xl font-bold text-stone-800 dark:text-white mb-2">Viewing Confirmed!</h3>
+              <p className="text-stone-600 dark:text-stone-300 mb-1">
+                Your viewing is booked for <strong>{selectedSlot.label}</strong>.
+              </p>
+              <p className="text-stone-500 dark:text-stone-400 text-sm">
+                We'll be in touch at <strong>{form.email}</strong> to confirm details.
+              </p>
+            </div>
+          )}
+        </div>
       </div>
     </section>
   );
@@ -414,7 +540,7 @@ const HomePage = () => {
       <WaveDivider fromColor="bg-stone-100 dark:bg-stone-900" toColor="fill-white dark:fill-stone-800" />
 
       {/* ── Booking ───────────────────────────────────────────────────────── */}
-      <CalendlyBookingSection />
+      <BookingSection />
 
       {/* Wave: booking → features */}
       <WaveDivider fromColor="bg-white dark:bg-stone-800" toColor="fill-stone-100 dark:fill-stone-900" flip />

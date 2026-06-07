@@ -11,7 +11,219 @@ import ThemeToggle from './ThemeToggle';
 import { VillaContent } from '../types';
 import { publishContent } from '../services/contentService';
 
-type Tab = 'mainImages' | 'location' | 'photos' | 'text' | 'faqs';
+type Tab = 'mainImages' | 'location' | 'photos' | 'text' | 'faqs' | 'viewings';
+
+// ── Types ─────────────────────────────────────────────────────────────────────
+interface BookingSlot {
+  id: string;
+  datetime: string;
+  label: string;
+  booked: boolean;
+}
+
+interface Booking {
+  id: string;
+  slotId: string;
+  slotDatetime: string;
+  slotLabel: string;
+  name: string;
+  email: string;
+  phone: string;
+  message: string;
+  createdAt: string;
+}
+
+// ── Viewings Manager ──────────────────────────────────────────────────────────
+const ViewingsManager = ({ apiToken }: { apiToken: string }) => {
+  const [slots, setSlots] = useState<BookingSlot[]>([]);
+  const [bookings, setBookings] = useState<Booking[]>([]);
+  const [subTab, setSubTab] = useState<'slots' | 'bookings'>('slots');
+  const [newDatetime, setNewDatetime] = useState('');
+  const [newLabel, setNewLabel] = useState('');
+  const [adding, setAdding] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+
+  const headers = { 'Authorization': `Bearer ${apiToken}`, 'Content-Type': 'application/json' };
+
+  const load = async () => {
+    setLoading(true);
+    try {
+      const [sRes, bRes] = await Promise.all([
+        fetch('/api/slots'),
+        fetch('/api/bookings', { headers }),
+      ]);
+      const allSlots: BookingSlot[] = await sRes.json();
+      const allBookings: Booking[] = await bRes.json();
+      // admin sees all slots including booked
+      const adminSlotsRes = await fetch('/api/slots');
+      // We need all slots — re-fetch bookings to get booked ones
+      setSlots(allSlots);
+      setBookings(allBookings);
+    } catch {
+      setError('Failed to load data');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => { load(); }, []);
+
+  const addSlot = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newDatetime || !newLabel) return;
+    setAdding(true);
+    try {
+      const res = await fetch('/api/slots', {
+        method: 'POST',
+        headers,
+        body: JSON.stringify({ datetime: newDatetime, label: newLabel }),
+      });
+      if (!res.ok) throw new Error('Failed to add slot');
+      setNewDatetime('');
+      setNewLabel('');
+      await load();
+    } catch {
+      setError('Failed to add slot');
+    } finally {
+      setAdding(false);
+    }
+  };
+
+  const deleteSlot = async (id: string) => {
+    if (!confirm('Delete this slot?')) return;
+    try {
+      await fetch(`/api/slots/${id}`, { method: 'DELETE', headers });
+      await load();
+    } catch {
+      setError('Failed to delete slot');
+    }
+  };
+
+  const cancelBooking = async (id: string) => {
+    if (!confirm('Cancel this booking and restore the slot?')) return;
+    try {
+      await fetch(`/api/bookings/${id}`, { method: 'DELETE', headers });
+      await load();
+    } catch {
+      setError('Failed to cancel booking');
+    }
+  };
+
+  const fmtDate = (iso: string) =>
+    new Date(iso).toLocaleString('en-GB', {
+      weekday: 'short', day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit',
+    });
+
+  return (
+    <div>
+      <div className="flex gap-2 mb-6">
+        {(['slots', 'bookings'] as const).map(t => (
+          <button
+            key={t}
+            onClick={() => setSubTab(t)}
+            className={`px-4 py-2 rounded-md text-sm font-medium ${subTab === t ? 'bg-amber-700 text-white' : 'bg-stone-100 dark:bg-stone-700 text-stone-600 dark:text-stone-300 hover:bg-stone-200 dark:hover:bg-stone-600'}`}
+          >
+            {t === 'slots' ? 'Available Slots' : 'Bookings'}{t === 'bookings' ? ` (${bookings.length})` : ''}
+          </button>
+        ))}
+      </div>
+
+      {error && <p className="text-red-600 text-sm mb-4">{error}</p>}
+      {loading && <p className="text-stone-500 text-sm">Loading…</p>}
+
+      {!loading && subTab === 'slots' && (
+        <>
+          <form onSubmit={addSlot} className="flex flex-wrap gap-3 mb-6 items-end">
+            <div>
+              <label className="block text-xs text-stone-500 mb-1">Date & Time</label>
+              <input
+                type="datetime-local"
+                value={newDatetime}
+                onChange={e => setNewDatetime(e.target.value)}
+                required
+                className="px-3 py-2 border border-stone-300 dark:border-stone-600 rounded-md bg-white dark:bg-stone-700 text-stone-800 dark:text-white text-sm"
+              />
+            </div>
+            <div>
+              <label className="block text-xs text-stone-500 mb-1">Label (e.g. 12:00)</label>
+              <input
+                type="text"
+                value={newLabel}
+                onChange={e => setNewLabel(e.target.value)}
+                placeholder="12:00 – 13:00"
+                required
+                className="px-3 py-2 border border-stone-300 dark:border-stone-600 rounded-md bg-white dark:bg-stone-700 text-stone-800 dark:text-white text-sm w-40"
+              />
+            </div>
+            <button
+              type="submit"
+              disabled={adding}
+              className="px-4 py-2 bg-amber-700 hover:bg-amber-800 text-white text-sm font-medium rounded-md disabled:opacity-60"
+            >
+              {adding ? 'Adding…' : '+ Add Slot'}
+            </button>
+          </form>
+
+          {slots.length === 0 ? (
+            <p className="text-stone-400 text-sm">No slots yet. Add one above.</p>
+          ) : (
+            <div className="space-y-2">
+              {slots.map(slot => (
+                <div key={slot.id} className="flex items-center justify-between bg-stone-50 dark:bg-stone-700 rounded-lg px-4 py-3">
+                  <div>
+                    <span className="font-medium text-stone-800 dark:text-white text-sm">{slot.label}</span>
+                    <span className="ml-3 text-stone-500 dark:text-stone-400 text-xs">{fmtDate(slot.datetime)}</span>
+                    {slot.booked && (
+                      <span className="ml-2 px-2 py-0.5 bg-red-100 text-red-700 text-xs rounded-full">Booked</span>
+                    )}
+                  </div>
+                  {!slot.booked && (
+                    <button
+                      onClick={() => deleteSlot(slot.id)}
+                      className="text-red-500 hover:text-red-700 text-sm"
+                    >
+                      Delete
+                    </button>
+                  )}
+                </div>
+              ))}
+            </div>
+          )}
+        </>
+      )}
+
+      {!loading && subTab === 'bookings' && (
+        <>
+          {bookings.length === 0 ? (
+            <p className="text-stone-400 text-sm">No bookings yet.</p>
+          ) : (
+            <div className="space-y-3">
+              {bookings.map(b => (
+                <div key={b.id} className="bg-stone-50 dark:bg-stone-700 rounded-lg px-4 py-4">
+                  <div className="flex items-start justify-between">
+                    <div>
+                      <p className="font-semibold text-stone-800 dark:text-white">{b.name}</p>
+                      <p className="text-sm text-stone-600 dark:text-stone-300">{b.email} · {b.phone}</p>
+                      <p className="text-xs text-amber-700 dark:text-amber-400 mt-1">{b.slotLabel} — {fmtDate(b.slotDatetime)}</p>
+                      {b.message && <p className="text-xs text-stone-500 dark:text-stone-400 mt-1 italic">"{b.message}"</p>}
+                    </div>
+                    <button
+                      onClick={() => cancelBooking(b.id)}
+                      className="text-red-500 hover:text-red-700 text-sm ml-4 shrink-0"
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </>
+      )}
+    </div>
+  );
+};
 
 const SaveSuccessToast = ({ show, message }: { show: boolean, message?: string }) => (
     <div className={`fixed top-8 right-8 bg-green-600 text-white px-6 py-3 rounded-lg shadow-lg transition-transform duration-300 ease-in-out z-50 ${show ? 'transform translate-x-0' : 'transform translate-x-full'}`}
@@ -173,6 +385,8 @@ const AdminPanel = () => {
                 return <TextManager />;
             case 'faqs':
                 return <FaqManager />;
+            case 'viewings':
+                return <ViewingsManager apiToken={apiToken ?? ''} />;
             default:
                 return null;
         }
@@ -270,6 +484,7 @@ const AdminPanel = () => {
                 <TabButton tab="photos">Photo Gallery</TabButton>
                 <TabButton tab="text">Page Text</TabButton>
                 <TabButton tab="faqs">Chatbot FAQs</TabButton>
+                <TabButton tab="viewings">📅 Viewings</TabButton>
             </div>
 
             <main className="bg-white p-6 rounded-lg shadow-md dark:bg-stone-800">
