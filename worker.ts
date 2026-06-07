@@ -20,11 +20,10 @@ interface Env {
   VILLA_LUAR_IMAGES: R2Bucket;
   VILLA_CONTENT: KVNamespace;
   ADMIN_PASSWORD: string;
-  GMAIL_CLIENT_ID: string;
-  GMAIL_CLIENT_SECRET: string;
-  GMAIL_REFRESH_TOKEN: string;
-  NOTIFY_EMAIL: string; // e.g. scott@cobellon.co.uk
-  FROM_EMAIL: string;   // e.g. scott@villaluar.com
+  MAILJET_APIKEY: string;
+  MAILJET_APISECRET: string;
+  NOTIFY_EMAIL: string; // scott@cobellon.co.uk
+  FROM_EMAIL: string;   // scott@villaluar.com
 }
 
 interface BookingSlot {
@@ -75,54 +74,29 @@ async function getBookings(env: Env): Promise<Booking[]> {
   return raw ? JSON.parse(raw) : [];
 }
 
-// ── Gmail API email sending ──────────────────────────────────────────────────
-async function getGmailAccessToken(env: Env): Promise<string> {
-  const res = await fetch('https://oauth2.googleapis.com/token', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-    body: new URLSearchParams({
-      client_id: env.GMAIL_CLIENT_ID,
-      client_secret: env.GMAIL_CLIENT_SECRET,
-      refresh_token: env.GMAIL_REFRESH_TOKEN,
-      grant_type: 'refresh_token',
-    }),
-  });
-  const data = await res.json() as { access_token: string };
-  return data.access_token;
-}
-
-function makeEmail(to: string, subject: string, body: string, from: string): string {
-  const message = [
-    `From: Villa Luar <${from}>`,
-    `To: ${to}`,
-    `Subject: ${subject}`,
-    'MIME-Version: 1.0',
-    'Content-Type: text/plain; charset=UTF-8',
-    '',
-    body,
-  ].join('\r\n');
-  // Base64url encode
-  return btoa(unescape(encodeURIComponent(message)))
-    .replace(/\+/g, '-')
-    .replace(/\//g, '_')
-    .replace(/=+$/, '');
-}
-
+// ── Mailjet email sending ────────────────────────────────────────────────────
 async function sendEmail(to: string, subject: string, body: string, env: Env): Promise<void> {
   try {
-    const token = await getGmailAccessToken(env);
-    const raw = makeEmail(to, subject, body, env.FROM_EMAIL);
-    const res = await fetch('https://gmail.googleapis.com/gmail/v1/users/me/messages/send', {
+    const auth = btoa(`${env.MAILJET_APIKEY}:${env.MAILJET_APISECRET}`);
+    const fromEmail = env.FROM_EMAIL || 'scott@villaluar.com';
+    const res = await fetch('https://api.mailjet.com/v3.1/send', {
       method: 'POST',
       headers: {
-        Authorization: `Bearer ${token}`,
+        Authorization: `Basic ${auth}`,
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ raw }),
+      body: JSON.stringify({
+        Messages: [{
+          From: { Email: fromEmail, Name: 'Villa Luar' },
+          To: [{ Email: to }],
+          Subject: subject,
+          TextPart: body,
+        }],
+      }),
     });
     if (!res.ok) {
       const err = await res.text();
-      console.error('Gmail send failed:', res.status, err);
+      console.error('Mailjet send failed:', res.status, err);
     }
   } catch (e) {
     console.error('Email error:', e);
