@@ -11,168 +11,7 @@ import ThemeToggle from './ThemeToggle';
 import { VillaContent } from '../types';
 import { publishContent } from '../services/contentService';
 
-type Tab = 'mainImages' | 'location' | 'photos' | 'text' | 'faqs' | 'bookings';
-
-// ─── Bookings Manager ─────────────────────────────────────────────────────────
-
-interface AdminSlot {
-  id: string;
-  datetime: string;
-  label: string;
-  booked: boolean;
-}
-
-interface AdminBooking {
-  id: string;
-  slotId: string;
-  slotLabel: string;
-  name: string;
-  email: string;
-  phone: string;
-  message: string;
-  bookedAt: string;
-}
-
-const BookingsManager = ({ apiToken }: { apiToken: string }) => {
-  const [slots, setSlots] = useState<AdminSlot[]>([]);
-  const [bookings, setBookings] = useState<AdminBooking[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [newDatetime, setNewDatetime] = useState('');
-  const [saving, setSaving] = useState(false);
-  const [activeView, setActiveView] = useState<'slots' | 'bookings'>('slots');
-
-  const headers = { 'Content-Type': 'application/json', Authorization: `Bearer ${apiToken}` };
-
-  const loadAll = async () => {
-    setLoading(true);
-    const [slotsRaw, bookingsRaw] = await Promise.all([
-      fetch('/api/slots').then(r => r.json() as Promise<AdminSlot[]>).catch(() => [] as AdminSlot[]),
-      fetch('/api/bookings', { headers }).then(r => r.json() as Promise<AdminBooking[]>).catch(() => [] as AdminBooking[]),
-    ]);
-    // Merge: also fetch all slots including booked ones via bookings data
-    const allSlotIds = new Set(slotsRaw.map((s: AdminSlot) => s.id));
-    const bookedSlots: AdminSlot[] = bookingsRaw.map((b: AdminBooking) => ({
-      id: b.slotId,
-      datetime: '',
-      label: b.slotLabel,
-      booked: true,
-    })).filter((s: AdminSlot) => !allSlotIds.has(s.id));
-    setSlots([...slotsRaw, ...bookedSlots].sort((a, b) => a.label.localeCompare(b.label)));
-    setBookings(bookingsRaw);
-    setLoading(false);
-  };
-
-  useEffect(() => { loadAll(); }, []);
-
-  const addSlot = async () => {
-    if (!newDatetime) return;
-    setSaving(true);
-    const dt = new Date(newDatetime);
-    const label = dt.toLocaleString('en-GB', {
-      weekday: 'long', day: 'numeric', month: 'long', hour: '2-digit', minute: '2-digit',
-    });
-    await fetch('/api/slots', {
-      method: 'POST',
-      headers,
-      body: JSON.stringify({ datetime: dt.toISOString(), label }),
-    });
-    setNewDatetime('');
-    await loadAll();
-    setSaving(false);
-  };
-
-  const deleteSlot = async (id: string) => {
-    if (!confirm('Delete this slot?')) return;
-    await fetch(`/api/slots/${id}`, { method: 'DELETE', headers });
-    await loadAll();
-  };
-
-  const deleteBooking = async (id: string) => {
-    if (!confirm('Cancel this booking and restore the slot?')) return;
-    await fetch(`/api/bookings/${id}`, { method: 'DELETE', headers });
-    await loadAll();
-  };
-
-  if (loading) return <p className="text-stone-500 p-4">Loading…</p>;
-
-  return (
-    <div className="space-y-6">
-      {/* Sub-nav */}
-      <div className="flex gap-4 border-b border-stone-200 dark:border-stone-700 pb-2">
-        {(['slots', 'bookings'] as const).map(v => (
-          <button key={v} onClick={() => setActiveView(v)}
-            className={`text-sm font-medium pb-2 transition-colors ${activeView === v ? 'text-amber-700 dark:text-amber-500 border-b-2 border-amber-700 dark:border-amber-500' : 'text-stone-500 hover:text-stone-800 dark:hover:text-stone-200'}`}>
-            {v === 'slots' ? `Slots (${slots.length})` : `Bookings (${bookings.length})`}
-          </button>
-        ))}
-      </div>
-
-      {activeView === 'slots' && (
-        <div className="space-y-4">
-          {/* Add slot */}
-          <div className="flex gap-3 items-end">
-            <div className="flex-1">
-              <label className="block text-xs font-medium text-stone-600 dark:text-stone-400 mb-1">Add new slot</label>
-              <input type="datetime-local" value={newDatetime} onChange={e => setNewDatetime(e.target.value)}
-                className="w-full px-3 py-2 rounded-lg border border-stone-300 dark:border-stone-600 bg-white dark:bg-stone-700 text-stone-900 dark:text-stone-100 text-sm focus:outline-none focus:ring-2 focus:ring-amber-600" />
-            </div>
-            <button onClick={addSlot} disabled={!newDatetime || saving}
-              className="px-4 py-2 bg-amber-700 text-white rounded-lg text-sm font-medium hover:bg-amber-800 disabled:opacity-50 transition-colors">
-              {saving ? 'Adding…' : '+ Add'}
-            </button>
-          </div>
-          {/* Slot list */}
-          {slots.length === 0 ? (
-            <p className="text-sm text-stone-500">No slots yet.</p>
-          ) : (
-            <div className="divide-y divide-stone-100 dark:divide-stone-700">
-              {slots.map(slot => (
-                <div key={slot.id} className="flex items-center justify-between py-2 gap-4">
-                  <div>
-                    <p className="text-sm text-stone-800 dark:text-stone-200">{slot.label}</p>
-                    <span className={`text-xs font-medium ${slot.booked ? 'text-red-600 dark:text-red-400' : 'text-green-600 dark:text-green-400'}`}>
-                      {slot.booked ? 'Booked' : 'Available'}
-                    </span>
-                  </div>
-                  {!slot.booked && (
-                    <button onClick={() => deleteSlot(slot.id)}
-                      className="text-xs text-red-500 hover:text-red-700 dark:hover:text-red-300 transition-colors">
-                      Delete
-                    </button>
-                  )}
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
-      )}
-
-      {activeView === 'bookings' && (
-        bookings.length === 0 ? (
-          <p className="text-sm text-stone-500">No bookings yet.</p>
-        ) : (
-          <div className="divide-y divide-stone-100 dark:divide-stone-700">
-            {bookings.map(b => (
-              <div key={b.id} className="py-4 flex items-start justify-between gap-4">
-                <div className="space-y-0.5">
-                  <p className="font-medium text-stone-800 dark:text-stone-100">{b.name}</p>
-                  <p className="text-sm text-amber-700 dark:text-amber-400">{b.slotLabel}</p>
-                  <p className="text-sm text-stone-500">{b.email}{b.phone ? ` · ${b.phone}` : ''}</p>
-                  {b.message && <p className="text-sm text-stone-400 italic">"{b.message}"</p>}
-                  <p className="text-xs text-stone-400">{new Date(b.bookedAt).toLocaleString('en-GB')}</p>
-                </div>
-                <button onClick={() => deleteBooking(b.id)}
-                  className="text-xs text-red-500 hover:text-red-700 dark:hover:text-red-300 flex-shrink-0 transition-colors">
-                  Cancel
-                </button>
-              </div>
-            ))}
-          </div>
-        )
-      )}
-    </div>
-  );
-};
+type Tab = 'mainImages' | 'location' | 'photos' | 'text' | 'faqs';
 
 const SaveSuccessToast = ({ show, message }: { show: boolean, message?: string }) => (
     <div className={`fixed top-8 right-8 bg-green-600 text-white px-6 py-3 rounded-lg shadow-lg transition-transform duration-300 ease-in-out z-50 ${show ? 'transform translate-x-0' : 'transform translate-x-full'}`}
@@ -334,8 +173,6 @@ const AdminPanel = () => {
                 return <TextManager />;
             case 'faqs':
                 return <FaqManager />;
-            case 'bookings':
-                return <BookingsManager apiToken={apiToken ?? ''} />;
             default:
                 return null;
         }
@@ -433,7 +270,6 @@ const AdminPanel = () => {
                 <TabButton tab="photos">Photo Gallery</TabButton>
                 <TabButton tab="text">Page Text</TabButton>
                 <TabButton tab="faqs">Chatbot FAQs</TabButton>
-                <TabButton tab="bookings">Viewings</TabButton>
             </div>
 
             <main className="bg-white p-6 rounded-lg shadow-md dark:bg-stone-800">

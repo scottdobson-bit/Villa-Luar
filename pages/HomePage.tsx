@@ -4,7 +4,7 @@ import { useContent } from '../context/ContentContext';
 import PhotoGallery, { PhotoGalleryHandle } from '../components/PhotoGallery';
 import ThemeToggle from '../components/ThemeToggle';
 
-
+import { CALENDLY_URL } from '../constants';
 import { useScrollRevealChildren } from '../utils/useScrollReveal';
 import type { StatIconKey, VillaStat } from '../types';
 
@@ -159,158 +159,58 @@ const FloatingContact = () => (
   </a>
 );
 
-// ─── Booking ──────────────────────────────────────────────────────────────────
+// ─── Calendly ─────────────────────────────────────────────────────────────────
+const CalendlyBookingSection = () => {
+  const widgetRef = React.useRef<HTMLDivElement>(null);
 
-interface BookingSlot {
-  id: string;
-  datetime: string;
-  label: string;
-  booked: boolean;
-}
+  React.useEffect(() => {
+    const el = widgetRef.current;
+    if (!el) return;
+    let cancelled = false;
+    let pollTimer: number | undefined;
 
-type BookingStep = 'slots' | 'form' | 'success';
+    const init = () => {
+      const Cal = (window as any).Calendly;
+      if (Cal && typeof Cal.initInlineWidget === 'function') {
+        Cal.initInlineWidget({ url: CALENDLY_URL, parentElement: el });
+        return true;
+      }
+      return false;
+    };
 
-const BookingSection = () => {
-  const [slots, setSlots] = useState<BookingSlot[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [step, setStep] = useState<BookingStep>('slots');
-  const [selected, setSelected] = useState<BookingSlot | null>(null);
-  const [form, setForm] = useState({ name: '', email: '', phone: '', message: '' });
-  const [submitting, setSubmitting] = useState(false);
-  const [error, setError] = useState('');
-
-  useEffect(() => {
-    fetch('/api/slots')
-      .then(r => r.json() as Promise<BookingSlot[]>)
-      .then(data => { setSlots(data); setLoading(false); })
-      .catch(() => setLoading(false));
-  }, []);
-
-  const handleSelect = (slot: BookingSlot) => {
-    setSelected(slot);
-    setStep('form');
-    setError('');
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!selected) return;
-    setSubmitting(true);
-    setError('');
-    try {
-      const res = await fetch('/api/book', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ slotId: selected.id, ...form }),
-      });
-      if (res.status === 409) { setError('That slot was just taken — please choose another.'); setStep('slots'); return; }
-      if (!res.ok) { setError('Something went wrong. Please try again.'); return; }
-      setStep('success');
-    } catch {
-      setError('Network error. Please try again.');
-    } finally {
-      setSubmitting(false);
+    // Try immediately; otherwise poll every 250ms for up to ~10s.
+    if (!init()) {
+      const start = Date.now();
+      const tick = () => {
+        if (cancelled) return;
+        if (init()) return;
+        if (Date.now() - start > 10000) return; // give up after 10s
+        pollTimer = window.setTimeout(tick, 250);
+      };
+      pollTimer = window.setTimeout(tick, 250);
     }
-  };
 
-  // Group slots by date
-  const grouped = slots.reduce<Record<string, BookingSlot[]>>((acc, slot) => {
-    const date = new Date(slot.datetime).toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long' });
-    if (!acc[date]) acc[date] = [];
-    acc[date].push(slot);
-    return acc;
-  }, {});
+    return () => {
+      cancelled = true;
+      if (pollTimer) window.clearTimeout(pollTimer);
+    };
+  }, []);
 
   return (
     <section id="booking" className="py-20 bg-white dark:bg-stone-800">
-      <div className="container mx-auto px-6 text-center max-w-3xl">
+      <div className="container mx-auto px-6 text-center max-w-4xl">
         <p className="text-amber-700 dark:text-amber-500 text-sm font-medium tracking-widest uppercase mb-3">
           Schedule Your Visit
         </p>
         <SectionHeading>Arrange a Private Viewing</SectionHeading>
         <p className="mt-4 text-stone-600 dark:text-stone-300 max-w-xl mx-auto text-lg">
-          Choose an available time slot to schedule your personal tour of Villa Luar.
+          Select an available time slot from our live calendar to schedule your personal tour of Villa Luar.
         </p>
-
-        <div className="mt-10">
-          {/* ── Step: slot picker ── */}
-          {step === 'slots' && (
-            loading ? (
-              <p className="text-stone-500 dark:text-stone-400">Loading available times…</p>
-            ) : slots.length === 0 ? (
-              <p className="text-stone-500 dark:text-stone-400">No viewing slots are currently available. Please check back soon.</p>
-            ) : (
-              <div className="space-y-8 text-left">
-                {Object.entries(grouped).map(([date, daySlots]) => (
-                  <div key={date}>
-                    <h3 className="text-sm font-semibold uppercase tracking-widest text-stone-500 dark:text-stone-400 mb-3">{date}</h3>
-                    <div className="flex flex-wrap gap-3">
-                      {daySlots.map(slot => (
-                        <button
-                          key={slot.id}
-                          onClick={() => handleSelect(slot)}
-                          className="px-5 py-3 rounded-xl border border-amber-700 dark:border-amber-500 text-amber-700 dark:text-amber-400 font-medium hover:bg-amber-700 hover:text-white dark:hover:bg-amber-600 dark:hover:text-white transition-colors text-sm"
-                        >
-                          {new Date(slot.datetime).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' })}
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            )
-          )}
-
-          {/* ── Step: contact form ── */}
-          {step === 'form' && selected && (
-            <form onSubmit={handleSubmit} className="text-left space-y-5 max-w-lg mx-auto">
-              <div className="p-4 rounded-xl bg-amber-50 dark:bg-stone-700 border border-amber-200 dark:border-stone-600">
-                <p className="text-sm text-stone-600 dark:text-stone-300">Your selected slot:</p>
-                <p className="font-semibold text-amber-800 dark:text-amber-400">{selected.label}</p>
-              </div>
-              {error && <p className="text-red-600 dark:text-red-400 text-sm">{error}</p>}
-              <div>
-                <label className="block text-sm font-medium text-stone-700 dark:text-stone-300 mb-1">Full name *</label>
-                <input required value={form.name} onChange={e => setForm(f => ({ ...f, name: e.target.value }))}
-                  className="w-full px-4 py-3 rounded-xl border border-stone-300 dark:border-stone-600 bg-white dark:bg-stone-700 text-stone-900 dark:text-stone-100 focus:outline-none focus:ring-2 focus:ring-amber-600" />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-stone-700 dark:text-stone-300 mb-1">Email *</label>
-                <input required type="email" value={form.email} onChange={e => setForm(f => ({ ...f, email: e.target.value }))}
-                  className="w-full px-4 py-3 rounded-xl border border-stone-300 dark:border-stone-600 bg-white dark:bg-stone-700 text-stone-900 dark:text-stone-100 focus:outline-none focus:ring-2 focus:ring-amber-600" />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-stone-700 dark:text-stone-300 mb-1">Phone</label>
-                <input type="tel" value={form.phone} onChange={e => setForm(f => ({ ...f, phone: e.target.value }))}
-                  className="w-full px-4 py-3 rounded-xl border border-stone-300 dark:border-stone-600 bg-white dark:bg-stone-700 text-stone-900 dark:text-stone-100 focus:outline-none focus:ring-2 focus:ring-amber-600" />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-stone-700 dark:text-stone-300 mb-1">Message</label>
-                <textarea rows={3} value={form.message} onChange={e => setForm(f => ({ ...f, message: e.target.value }))}
-                  className="w-full px-4 py-3 rounded-xl border border-stone-300 dark:border-stone-600 bg-white dark:bg-stone-700 text-stone-900 dark:text-stone-100 focus:outline-none focus:ring-2 focus:ring-amber-600 resize-none" />
-              </div>
-              <div className="flex gap-3">
-                <button type="button" onClick={() => setStep('slots')}
-                  className="flex-1 py-3 rounded-xl border border-stone-300 dark:border-stone-600 text-stone-600 dark:text-stone-300 hover:bg-stone-100 dark:hover:bg-stone-700 transition-colors">
-                  ← Back
-                </button>
-                <button type="submit" disabled={submitting}
-                  className="flex-1 py-3 rounded-xl bg-amber-700 hover:bg-amber-800 text-white font-semibold transition-colors disabled:opacity-50">
-                  {submitting ? 'Sending…' : 'Confirm booking'}
-                </button>
-              </div>
-            </form>
-          )}
-
-          {/* ── Step: success ── */}
-          {step === 'success' && (
-            <div className="max-w-md mx-auto text-center py-8">
-              <div className="text-5xl mb-4">✓</div>
-              <h3 className="text-xl font-semibold text-stone-800 dark:text-stone-100 mb-2">You're booked!</h3>
-              <p className="text-stone-600 dark:text-stone-300">We'll be in touch to confirm your viewing of Villa Luar. See you soon.</p>
-            </div>
-          )}
-        </div>
+        <div
+          ref={widgetRef}
+          className="mt-10 border dark:border-stone-700 rounded-2xl shadow-xl overflow-hidden bg-white min-h-[900px] md:min-h-[1100px]"
+          style={{ minWidth: '320px' }}
+        />
       </div>
     </section>
   );
@@ -514,7 +414,7 @@ const HomePage = () => {
       <WaveDivider fromColor="bg-stone-100 dark:bg-stone-900" toColor="fill-white dark:fill-stone-800" />
 
       {/* ── Booking ───────────────────────────────────────────────────────── */}
-      <BookingSection />
+      <CalendlyBookingSection />
 
       {/* Wave: booking → features */}
       <WaveDivider fromColor="bg-white dark:bg-stone-800" toColor="fill-stone-100 dark:fill-stone-900" flip />
