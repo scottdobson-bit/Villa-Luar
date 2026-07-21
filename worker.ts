@@ -22,6 +22,7 @@ interface Env {
   ADMIN_PASSWORD: string;
   MAILJET_APIKEY: string;
   MAILJET_APISECRET: string;
+  EMAIL_ENGINE_KEY: string;
   NOTIFY_EMAIL: string; // scott@cobellon.co.uk
   FROM_EMAIL: string;   // scott@villaluar.com
 }
@@ -77,12 +78,11 @@ async function getBookings(env: Env): Promise<Booking[]> {
 // ── Mailjet email sending ────────────────────────────────────────────────────
 async function sendEmail(to: string, subject: string, body: string, env: Env): Promise<void> {
   try {
-    const auth = btoa(`${env.MAILJET_APIKEY}:${env.MAILJET_APISECRET}`);
     const fromEmail = env.FROM_EMAIL || 'scott@villaluar.com';
-    const res = await fetch('https://api.mailjet.com/v3.1/send', {
+    const res = await fetch('https://webhooks.villacheckin.com/api/email/send', {
       method: 'POST',
       headers: {
-        Authorization: `Basic ${auth}`,
+        Authorization: `Bearer ${env.EMAIL_ENGINE_KEY}`,
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({

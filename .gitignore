@@ -20,3 +20,6 @@ villa-content.backup.json
 .vscode/
 .idea/
 *.log
+
+# Graphify knowledge-graph output (rebuilt locally by git hooks)
+graphify-out/
