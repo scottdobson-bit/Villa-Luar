@@ -20,7 +20,7 @@ source code.
 - **Add/rotate a secret:** set it in this repo's Doppler project (`vci-<app>`; shared creds in
   `vci-shared`) FIRST, then redeploy/push. Never add it straight to platform env or `.env`.
 
-Full policy + patterns: global `~/.claude/CLAUDE.md` → §Secrets & Doppler.
+Full policy + patterns: global `~/.claude/CLAUDE.md` §Facts → Secrets, full text `villacheckin-automations/docs/runbooks/doppler-policy.md`.
 <!-- /DOPPLER-POLICY -->
 
 ---
@@ -29,7 +29,7 @@ Full policy + patterns: global `~/.claude/CLAUDE.md` → §Secrets & Doppler.
 
 ## Estate knowledge base — read this before non-trivial work
 
-There is a single Obsidian vault covering all 26 repos, holding the incident record and the
+There is a single Obsidian vault covering every repo in the estate, holding the incident record and the
 standing rules. **The rules bind the whole estate, not just the repo you are in** — several were
 written after a fault in one repo caused damage visible only in another.
 
