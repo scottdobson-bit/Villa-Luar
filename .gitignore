@@ -23,3 +23,9 @@ villa-content.backup.json
 
 # Graphify knowledge-graph output (rebuilt locally by git hooks)
 graphify-out/
+
+# secrets — estate policy 08/09/2026 (Doppler is the only source)
+.dev.vars*
+*.key
+*.pem
+credentials*
