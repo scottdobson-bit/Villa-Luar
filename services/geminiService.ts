@@ -39,7 +39,7 @@ export const generateDescriptionForImage = async (imageFile: File): Promise<stri
     Keep it under 50 words. Do not use bullet points or lists.`;
 
     const response: GenerateContentResponse = await ai.models.generateContent({
-      model: 'gemini-2.5-flash',
+      model: 'gemini-3.8-flash', // 25/09/2026: 2.5 Flash is closed to new projects; 3.8 Flash GA 02/09/2026
       contents: { parts: [imagePart, {text: prompt}] },
     });
     
@@ -80,7 +80,7 @@ export const getChatbotResponse = async (question: string, faqs: FAQ[]): Promise
     Your answer:`;
 
     const response: GenerateContentResponse = await ai.models.generateContent({
-      model: 'gemini-2.5-flash',
+      model: 'gemini-3.8-flash', // 25/09/2026: 2.5 Flash is closed to new projects; 3.8 Flash GA 02/09/2026
       contents: prompt,
     });
 
