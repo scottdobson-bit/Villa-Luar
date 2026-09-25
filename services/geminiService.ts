@@ -1,49 +1,31 @@
-import { GoogleGenAI, GenerateContentResponse } from "@google/genai";
 import { FAQ } from "../types";
 
-// Helper to get AI instance safely
-const getAI = () => {
-  const apiKey = process.env.API_KEY;
-  if (!apiKey) {
-    console.warn("API_KEY is missing.");
-    return null;
-  }
-  return new GoogleGenAI({ apiKey });
-};
+// 25/09/2026: every model call goes through the Worker (/api/ai/*), which holds
+// the OpenRouter key server-side. The browser used to call Google directly with
+// an API key compiled into the bundle (process.env.API_KEY).
 
-// Utility to convert file to base64
-const fileToGenerativePart = async (file: File) => {
-  const base64EncodedDataPromise = new Promise<string>((resolve) => {
-    const reader = new FileReader();
-    reader.onloadend = () => {
-      if (typeof reader.result === 'string') {
-        resolve(reader.result.split(',')[1]);
-      }
-    };
-    reader.readAsDataURL(file);
-  });
-  return {
-    inlineData: { data: await base64EncodedDataPromise, mimeType: file.type },
+// Utility to convert file to base64 (without the data: prefix)
+const fileToBase64 = (file: File) => new Promise<string>((resolve, reject) => {
+  const reader = new FileReader();
+  reader.onloadend = () => {
+    if (typeof reader.result === 'string') resolve(reader.result.split(',')[1]);
+    else reject(new Error('Could not read image'));
   };
-};
+  reader.onerror = () => reject(new Error('Could not read image'));
+  reader.readAsDataURL(file);
+});
 
-export const generateDescriptionForImage = async (imageFile: File): Promise<string> => {
+export const generateDescriptionForImage = async (imageFile: File, apiToken: string | null): Promise<string> => {
+  if (!apiToken) return "Error: Not authenticated.";
   try {
-    const ai = getAI();
-    if (!ai) return "Error: API Key missing.";
-
-    const imagePart = await fileToGenerativePart(imageFile);
-    const prompt = `You are a luxury real estate agent writing a listing for a high-end Spanish villa. 
-    Write a short, evocative, and appealing description for this photo. 
-    Focus on the feeling, materials, lifestyle, and unique details shown. 
-    Keep it under 50 words. Do not use bullet points or lists.`;
-
-    const response: GenerateContentResponse = await ai.models.generateContent({
-      model: 'gemini-3.8-flash', // 25/09/2026: 2.5 Flash is closed to new projects; 3.8 Flash GA 02/09/2026
-      contents: { parts: [imagePart, {text: prompt}] },
+    const res = await fetch('/api/ai/describe-image', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${apiToken}` },
+      body: JSON.stringify({ image_base64: await fileToBase64(imageFile), mime_type: imageFile.type }),
     });
-    
-    return response.text?.trim() ?? "Description could not be generated.";
+    const data = await res.json().catch(() => ({})) as { description?: string; error?: string };
+    if (!res.ok || !data.description) throw new Error(data.error || `HTTP ${res.status}`);
+    return data.description;
   } catch (error) {
     console.error("Error generating description:", error);
     return "Error: Could not generate description.";
@@ -51,40 +33,16 @@ export const generateDescriptionForImage = async (imageFile: File): Promise<stri
 };
 
 export const getChatbotResponse = async (question: string, faqs: FAQ[]): Promise<string> => {
-  if (!question.trim()) {
-    return "Please ask a question.";
-  }
-
+  if (!question.trim()) return "Please ask a question.";
   try {
-    const ai = getAI();
-    if (!ai) return "I'm sorry, I'm not correctly configured right now (Missing API Key).";
-
-     if (!faqs || faqs.length === 0) {
-      return "Thank you for your question. We are currently updating our information. Please contact an agent for more details about Villa Luar.";
-    }
-
-    const faqString = faqs.map(faq => `Q: ${faq.question}\nA: ${faq.answer}`).join('\n\n');
-    
-    const prompt = `You are a helpful and friendly chatbot for a luxury villa listing called "Villa Luar". 
-    Your goal is to answer potential buyer questions based ONLY on the provided Frequently Asked Questions.
-    Do not make up information. 
-    If the user's question cannot be answered from the FAQs, politely say you don't have that information and suggest they contact an agent.
-
-    Here are the available FAQs:
-    ---
-    ${faqString}
-    ---
-
-    User's question: "${question}"
-
-    Your answer:`;
-
-    const response: GenerateContentResponse = await ai.models.generateContent({
-      model: 'gemini-3.8-flash', // 25/09/2026: 2.5 Flash is closed to new projects; 3.8 Flash GA 02/09/2026
-      contents: prompt,
+    const res = await fetch('/api/ai/chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ question, faqs }),
     });
-
-    return response.text?.trim() ?? "I am sorry, I am having trouble responding right now.";
+    const data = await res.json().catch(() => ({})) as { answer?: string; error?: string };
+    if (!res.ok || !data.answer) throw new Error(data.error || `HTTP ${res.status}`);
+    return data.answer;
   } catch (error) {
     console.error("Error getting chatbot response:", error);
     return "Error: Could not get a response.";

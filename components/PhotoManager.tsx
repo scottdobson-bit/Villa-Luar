@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { useContent } from '../context/ContentContext';
 import { VillaPhoto, PhotoSection } from '../types';
 import { generateDescriptionForImage } from '../services/geminiService';
+import { useAuth } from '../context/AuthContext';
 import { optimizeAndConvertToBase64 } from '../imageOptimizer';
 
 const LoadingSpinner = () => (
@@ -21,6 +22,7 @@ interface DragItem {
 }
 
 const PhotoManager = () => {
+    const { apiToken } = useAuth();
     const { draftContent, updateDraftContent } = useContent();
     const [isGenerating, setIsGenerating] = useState<string | null>(null);
     const [isUploading, setIsUploading] = useState(false);
@@ -104,7 +106,7 @@ const PhotoManager = () => {
             updateSections(updatedSections);
             
             // Generate description
-            const description = await generateDescriptionForImage(file);
+            const description = await generateDescriptionForImage(file, apiToken);
             
             // Update with real ID and description
             const finalSections = updatedSections.map(section => {
@@ -144,7 +146,7 @@ const PhotoManager = () => {
 
         try {
             const base64Url = await optimizeAndConvertToBase64(file);
-            const description = await generateDescriptionForImage(file);
+            const description = await generateDescriptionForImage(file, apiToken);
 
             const updatedSections = gallerySections.map(section => {
                 if (section.id === sectionId) {

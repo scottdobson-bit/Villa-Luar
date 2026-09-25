@@ -12,6 +12,8 @@
  *   POST /api/book           — books a slot, sends confirmation emails
  *   GET  /api/bookings       — lists all bookings (admin auth required)
  *   DELETE /api/bookings/:id — cancels booking & restores slot (admin auth required)
+ *   POST /api/ai/describe-image — photo caption via OpenRouter (admin auth required)
+ *   POST /api/ai/chat        — FAQ chatbot answer via OpenRouter (public, size-capped)
  *   *                        — falls through to static site assets
  */
 
@@ -25,6 +27,8 @@ interface Env {
   EMAIL_ENGINE_KEY: string;
   NOTIFY_EMAIL: string; // scott@cobellon.co.uk
   FROM_EMAIL: string;   // scott@villaluar.com
+  OPENROUTER_API_KEY: string; // Doppler non-vci/prd → `wrangler secret put` (never in the browser bundle)
+  AI_MODEL?: string;           // optional override, defaults to AI_DEFAULT_MODEL
 }
 
 interface BookingSlot {
@@ -57,6 +61,39 @@ function jsonResponse(data: unknown, status = 200): Response {
     status,
     headers: { 'Content-Type': 'application/json', ...CORS_HEADERS },
   });
+}
+
+// ── AI (25/09/2026) ─────────────────────────────────────────────────────────
+// All model calls happen HERE, never in the browser: the page used to call
+// Google directly with an API key compiled into the JS bundle. OpenRouter is the
+// single estate gateway for Gemini. 3.8 Flash "thinks" by default and max_tokens
+// includes that reasoning, so short answers send reasoning.effort "low".
+const AI_DEFAULT_MODEL = 'google/gemini-3.8-flash';
+const MAX_IMAGE_BYTES = 6 * 1024 * 1024;
+
+async function callOpenRouter(env: Env, messages: unknown[], maxTokens: number): Promise<string> {
+  if (!env.OPENROUTER_API_KEY) throw new Error('OPENROUTER_API_KEY not configured');
+  const res = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${env.OPENROUTER_API_KEY}`,
+      'Content-Type': 'application/json',
+      'HTTP-Referer': 'https://villaluar.com',
+      'X-Title': 'Villa Luar site',
+    },
+    body: JSON.stringify({
+      model: env.AI_MODEL || AI_DEFAULT_MODEL,
+      messages,
+      max_tokens: maxTokens,
+      reasoning: { effort: 'low' },
+    }),
+    signal: AbortSignal.timeout(30_000),
+  });
+  if (!res.ok) throw new Error(`OpenRouter HTTP ${res.status}: ${(await res.text()).slice(0, 200)}`);
+  const data = await res.json() as { choices?: Array<{ message?: { content?: string } }> };
+  const text = (data.choices?.[0]?.message?.content ?? '').trim();
+  if (!text) throw new Error('OpenRouter returned an empty answer');
+  return text;
 }
 
 function isAuthorized(request: Request, env: Env): boolean {
@@ -122,6 +159,49 @@ export default {
     // CORS preflight
     if (method === 'OPTIONS') {
       return new Response(null, { status: 204, headers: CORS_HEADERS });
+    }
+
+    // ── POST /api/ai/describe-image (admin) ──────────────────────────────────
+    if (pathname === '/api/ai/describe-image' && method === 'POST') {
+      if (!isAuthorized(request, env)) return jsonResponse({ error: 'Unauthorized' }, 401);
+      const body = await request.json().catch(() => null) as { image_base64?: string; mime_type?: string } | null;
+      const b64 = body?.image_base64 ?? '';
+      const mime = body?.mime_type ?? '';
+      if (!b64 || !/^image\/(jpeg|png|webp|gif)$/.test(mime)) return jsonResponse({ error: 'image_base64 and an image mime_type are required' }, 400);
+      if (b64.length * 0.75 > MAX_IMAGE_BYTES) return jsonResponse({ error: 'Image too large' }, 413);
+      try {
+        const description = await callOpenRouter(env, [{
+          role: 'user',
+          content: [
+            { type: 'text', text: 'You are a luxury real estate agent writing a listing for a high-end Spanish villa. Write a short, evocative, and appealing description for this photo. Focus on the feeling, materials, lifestyle, and unique details shown. Keep it under 50 words. Do not use bullet points or lists.' },
+            { type: 'image_url', image_url: { url: `data:${mime};base64,${b64}` } },
+          ],
+        }], 300);
+        return jsonResponse({ description });
+      } catch (err) {
+        console.error('describe-image failed:', (err as Error).message);
+        return jsonResponse({ error: 'AI unavailable' }, 502);
+      }
+    }
+
+    // ── POST /api/ai/chat (public, capped) ───────────────────────────────────
+    if (pathname === '/api/ai/chat' && method === 'POST') {
+      const body = await request.json().catch(() => null) as { question?: string; faqs?: Array<{ question?: string; answer?: string }> } | null;
+      const question = String(body?.question ?? '').trim().slice(0, 500);
+      if (!question) return jsonResponse({ error: 'question required' }, 400);
+      const faqText = (Array.isArray(body?.faqs) ? body!.faqs : [])
+        .slice(0, 60).map(f => `Q: ${String(f?.question ?? '')}\nA: ${String(f?.answer ?? '')}`).join('\n\n').slice(0, 12_000);
+      if (!faqText) return jsonResponse({ answer: 'Thank you for your question. We are currently updating our information. Please contact an agent for more details about Villa Luar.' });
+      try {
+        const answer = await callOpenRouter(env, [
+          { role: 'system', content: 'You are a helpful and friendly chatbot for a luxury villa listing called "Villa Luar". Answer potential buyer questions based ONLY on the provided Frequently Asked Questions. Do not make up information. If the question cannot be answered from the FAQs, politely say you do not have that information and suggest they contact an agent.' },
+          { role: 'user', content: `FAQs:\n---\n${faqText}\n---\n\nQuestion: "${question}"` },
+        ], 400);
+        return jsonResponse({ answer });
+      } catch (err) {
+        console.error('chat failed:', (err as Error).message);
+        return jsonResponse({ error: 'AI unavailable' }, 502);
+      }
     }
 
     // ── GET /images/* ────────────────────────────────────────────────────────

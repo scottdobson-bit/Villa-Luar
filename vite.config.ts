@@ -20,11 +20,6 @@ export default defineConfig(({ mode }) => {
     optimizeDeps: {
       include: ['react-router-dom', 'react-router'],
     },
-    define: {
-      'process.env': {
-        API_KEY: JSON.stringify(env.API_KEY)
-      }
-    },
     build: {
       outDir: 'dist',
       assetsDir: 'assets',
